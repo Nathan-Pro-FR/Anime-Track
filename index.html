@@ -70,45 +70,75 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* --- NOUVELLES STATISTIQUES COLOREES & ANIMEES --- */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
             margin-bottom: 40px;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 16px 20px;
+            border-radius: 20px;
+            padding: 20px 24px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            backdrop-filter: blur(10px);
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
         }
 
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+        }
+
+        /* Fonds dégradés colorés distinctifs pour chaque stat */
+        .stat-card.total { background: linear-gradient(135deg, #1e1e38 0%, #2b2b54 100%); }
+        .stat-card.watching { background: linear-gradient(135deg, #0f2b48 0%, #1a4473 100%); }
+        .stat-card.completed { background: linear-gradient(135deg, #053429 0%, #0d5443 100%); }
+        .stat-card.average { background: linear-gradient(135deg, #3d2b08 0%, #61450c 100%); }
+
         .stat-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            background: rgba(255, 255, 255, 0.05);
+            font-size: 1.4rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.2);
+        }
+
+        .stat-card.total .stat-icon { color: #8a99ff; }
+        .stat-card.watching .stat-icon { color: #50bfff; }
+        .stat-card.completed .stat-icon { color: #10f0b6; }
+        .stat-card.average .stat-icon { color: #ffca28; }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
         }
 
         .stat-info .stat-value {
-            font-size: 1.4rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 800;
             color: #fff;
+            line-height: 1.1;
+            margin-bottom: 2px;
+            transition: all 0.3s ease;
         }
 
         .stat-info .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 500;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+            letter-spacing: 0.02em;
         }
 
         /* --- BARRE DE CONTROLE & FILTRES --- */
@@ -274,7 +304,6 @@
             background: linear-gradient(to top, var(--card-bg) 0%, rgba(23, 23, 37, 0) 100%);
         }
 
-        /* Badge Statut flottant visuel */
         .status-badge-pill {
             position: absolute;
             top: 15px;
@@ -322,7 +351,6 @@
         
         .anime-synopsis.expanded { -webkit-line-clamp: unset; }
 
-        /* Customiseur du Select */
         .status-select-custom {
             background: #222235;
             border: 1px solid var(--card-border);
@@ -337,7 +365,6 @@
         }
         .status-select-custom option { background: #171725; color: white; }
 
-        /* Zone d'Étoiles de notation */
         .rating-block {
             display: flex;
             align-items: center;
@@ -372,7 +399,6 @@
         }
         .delete-btn:hover { background: var(--danger); color: white; }
 
-        /* Responsive */
         @media (max-width: 850px) {
             .controls-panel { flex-direction: column; align-items: stretch; }
             .search-filters-group { flex-direction: column; }
@@ -386,31 +412,31 @@
 <div class="container">
     <header>
         <div class="header-main">
-            <h1>My Anime Tracker <span style="font-size:1.2rem; color:var(--accent)">v2.0</span></h1>
+            <h1>My Anime Tracker <span style="font-size:1.2rem; color:var(--accent)">v2.1</span></h1>
             <div class="data-buttons">
                 <button class="btn btn-secondary" onclick="exportData('json')"><i class="fa-solid fa-code"></i> Export JSON</button>
                 <button class="btn btn-secondary" onclick="exportData('csv')"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
-                <button class="btn btn-primary" onclick="document.getElementById('import-file').click()"><i class="fa-solid fa-file-import"></i> Importer (.json/.csv)</button>
+                <button class="btn btn-primary" onclick="document.getElementById('import-file').click()"><i class="fa-solid fa-file-import"></i> Importer</button>
                 <input type="file" id="import-file" style="display: none;" accept=".json,.csv" onchange="importData(event)">
             </div>
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon" style="color: #fff"><i class="fa-solid fa-film"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-total">0</div><div class="stat-label">Total suivis</div></div>
+            <div class="stat-card total">
+                <div class="stat-icon"><i class="fa-solid fa-film"></i></div>
+                <div class="stat-info"><div class="stat-value" id="stat-total" data-target="0">0</div><div class="stat-label">Total suivis</div></div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="color: var(--color-en-cours)"><i class="fa-solid fa-play"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-watching">0</div><div class="stat-label">En cours</div></div>
+            <div class="stat-card watching">
+                <div class="stat-icon"><i class="fa-solid fa-play"></i></div>
+                <div class="stat-info"><div class="stat-value" id="stat-watching" data-target="0">0</div><div class="stat-label">En cours</div></div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="color: var(--color-vu)"><i class="fa-solid fa-circle-check"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-completed">0</div><div class="stat-label">Terminés</div></div>
+            <div class="stat-card completed">
+                <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="stat-info"><div class="stat-value" id="stat-completed" data-target="0">0</div><div class="stat-label">Terminés</div></div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="color: var(--star-color)"><i class="fa-solid fa-star"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-average">0.0</div><div class="stat-label">Note Moyenne</div></div>
+            <div class="stat-card average">
+                <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
+                <div class="stat-info"><div class="stat-value" id="stat-average" data-target="0.0">0.0</div><div class="stat-label">Note Moyenne</div></div>
             </div>
         </div>
 
@@ -452,7 +478,6 @@
     const searchResults = document.getElementById('search-results');
     const animeListContainer = document.getElementById('anime-list');
 
-    // Mappage couleur pour les badges
     const statusColors = {
         "Pas commencé": "var(--color-pas-commence)",
         "En cours": "var(--color-en-cours)",
@@ -461,7 +486,7 @@
         "Abandonné": "var(--color-abandonne)"
     };
 
-    // --- RECHERCHE JIKAN API V4 ---
+    // --- RECHERCHE JIKAN API ---
     let debounceTimer;
     searchInput.addEventListener('input', () => {
         clearTimeout(debounceTimer);
@@ -488,7 +513,7 @@
                 <img src="${anime.images.jpg.image_url}" alt="">
                 <div class="info-box">
                     <span class="title">${anime.title}</span>
-                    <span class="meta">${anime.type || 'TV'} • ${anime.episodes || '?'} éps • Étoiles globales : ${anime.score || '?'}</span>
+                    <span class="meta">${anime.type || 'TV'} • ${anime.episodes || '?'} éps</span>
                 </div>
             `;
             div.onclick = () => addAnime(anime);
@@ -497,15 +522,45 @@
         searchResults.style.display = 'block';
     }
 
-    // --- SYSTEME COMPTEURS STATS ---
+    // --- ANIMATION INTERACTIVE DES COMPTEURS ---
+    function animateCounter(id, targetValue, isFloat = false) {
+        const el = document.getElementById(id);
+        const startValue = parseFloat(el.innerText) || 0;
+        const duration = 800; // Durée de l'animation en millisecondes
+        let startTime = null;
+
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            
+            // Calcul de la valeur actuelle avec interpolation fluide (easeOutQuad)
+            const easeProgress = progress * (2 - progress);
+            const currentValue = startValue + (targetValue - startValue) * easeProgress;
+
+            el.innerText = isFloat ? currentValue.toFixed(1) : Math.floor(currentValue);
+
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            } else {
+                el.innerText = isFloat ? targetValue.toFixed(1) : targetValue;
+            }
+        }
+        window.requestAnimationFrame(step);
+    }
+
     function updateDashboard() {
-        document.getElementById('stat-total').innerText = myAnimes.length;
-        document.getElementById('stat-watching').innerText = myAnimes.filter(a => a.status === 'En cours').length;
-        document.getElementById('stat-completed').innerText = myAnimes.filter(a => a.status === 'Vu').length;
+        const total = myAnimes.length;
+        const watching = myAnimes.filter(a => a.status === 'En cours').length;
+        const completed = myAnimes.filter(a => a.status === 'Vu').length;
         
         const ratedAnimes = myAnimes.filter(a => a.rating > 0);
-        const avg = ratedAnimes.length ? (ratedAnimes.reduce((sum, a) => sum + a.rating, 0) / ratedAnimes.length).toFixed(1) : "0.0";
-        document.getElementById('stat-average').innerText = avg;
+        const avg = ratedAnimes.length ? parseFloat((ratedAnimes.reduce((sum, a) => sum + a.rating, 0) / ratedAnimes.length).toFixed(1)) : 0.0;
+
+        // Déclencher les animations de compteur distinctes
+        animateCounter('stat-total', total);
+        animateCounter('stat-watching', watching);
+        animateCounter('stat-completed', completed);
+        animateCounter('stat-average', avg, true);
     }
 
     // --- FONCTIONS CRUD ---
@@ -550,7 +605,7 @@
         renderList();
     }
 
-    // --- RENDU AVEC FILTRE ET TRI ---
+    // --- RENDU ET TRIS ---
     function renderList() {
         updateDashboard();
         animeListContainer.innerHTML = '';
@@ -558,19 +613,17 @@
         const activeFilter = document.getElementById('filter-status').value;
         const activeSort = document.getElementById('sort-by').value;
 
-        // Étape 1: Filtrage
         let filteredList = myAnimes.filter(anime => activeFilter === "Tous" || anime.status === activeFilter);
 
-        // Étape 2: Tri
         filteredList.sort((a, b) => {
             if (activeSort === 'rating-desc') return b.rating - a.rating;
             if (activeSort === 'rating-asc') return a.rating - b.rating;
             if (activeSort === 'title-asc') return a.title.localeCompare(b.title);
-            return b.addedAt - a.addedAt; // date-desc par défaut
+            return b.addedAt - a.addedAt;
         });
 
         if (filteredList.length === 0) {
-            animeListContainer.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:60px 0;"><i class="fa-solid fa-folder-open" style="font-size:3rem; margin-bottom:15px; display:block;"></i>Aucun anime ne correspond à vos critères.</div>`;
+            animeListContainer.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:60px 0;"><i class="fa-solid fa-folder-open" style="font-size:3rem; margin-bottom:15px; display:block;"></i>Aucun anime trouvé.</div>`;
             return;
         }
 
@@ -631,10 +684,9 @@
         changeRating(animeId, finalRating);
     }
 
-    // --- IMPORT / EXPORT AVANCÉ (JSON ET CSV) ---
+    // --- EXPORTS & IMPORTS ---
     function exportData(format) {
         if (myAnimes.length === 0) return alert("Aucune donnée à exporter.");
-        
         let dataStr = "";
         let filename = `mon_anime_tracker_${Date.now()}`;
 
@@ -642,10 +694,8 @@
             dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(myAnimes, null, 2));
             filename += ".json";
         } else if (format === 'csv') {
-            // Création des lignes du tableur CSV
             let csvContent = "id,title,status,rating,addedAt\n";
             myAnimes.forEach(a => {
-                // Remplacement des virgules ou guillemets pour éviter de casser le fichier CSV
                 let safeTitle = a.title.replace(/"/g, '""');
                 csvContent += `${a.id},"${safeTitle}","${a.status}",${a.rating},${a.addedAt}\n`;
             });
@@ -673,21 +723,18 @@
                 if (extension === 'json') {
                     const imported = JSON.parse(e.target.result);
                     if (Array.isArray(imported)) { myAnimes = imported; saveAndRender(); }
-                    else { alert("Format JSON invalide."); }
                 } 
                 else if (extension === 'csv') {
                     const lines = e.target.result.split('\n');
                     let parsedAnimes = [];
-                    // Sauter la ligne d'en-tête
                     for(let i = 1; i < lines.length; i++) {
                         if(!lines[i].trim()) continue;
-                        // Regex simple pour découper les colonnes CSV en ignorant les virgules dans le titre entre guillemets
                         const matches = lines[i].match(/(\d+),"(.+)",(.+),([\d.]+),(\d+)/);
                         if(matches) {
                             parsedAnimes.push({
                                 id: parseInt(matches[1]),
                                 title: matches[2].replace(/""/g, '"'),
-                                image: "https://via.placeholder.com/225x320?text=Importé", // fallback image standard
+                                image: "https://via.placeholder.com/225x320?text=Importé",
                                 synopsis: "Anime réimporté via CSV.",
                                 status: matches[3].replace(/"/g, ''),
                                 rating: parseFloat(matches[4]),
@@ -696,13 +743,11 @@
                         }
                     }
                     if(parsedAnimes.length > 0) {
-                        if(confirm(`Importer ${parsedAnimes.length} animes depuis le CSV ? (Cela écrasera la liste actuelle)`)){
-                            myAnimes = parsedAnimes;
-                            saveAndRender();
-                        }
-                    } else { alert("Fichier CSV illisible ou vide."); }
+                        myAnimes = parsedAnimes;
+                        saveAndRender();
+                    }
                 }
-            } catch (err) { alert("Erreur lors de la lecture du fichier."); }
+            } catch (err) { alert("Erreur lors de l'import."); }
         };
         reader.readAsText(file);
     }
