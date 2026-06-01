@@ -3,32 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Anime Tracker</title>
+    <title>My Anime Tracker Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #0f0f13 0%, #1a1a24 100%);
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --card-border: rgba(255, 255, 255, 0.08);
+            --bg-gradient: linear-gradient(135deg, #0b0b0f 0%, #14141f 100%);
+            --card-bg: #171725;
+            --card-border: rgba(255, 255, 255, 0.06);
             --card-hover-border: rgba(94, 114, 228, 0.4);
             --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
+            --text-muted: #6c7293;
             --accent: #5e72e4;
             --accent-hover: #4353cc;
             --danger: #fa5c7c;
-            --danger-hover: #e04463;
             --star-color: #ffb703;
             
-            /* Couleurs pour les options du menu déroulant */
-            --select-dropdown-bg: #1f1f2e;
-            --select-option-hover: #2a2a3d;
+            /* Couleurs des Statuts */
+            --color-pas-commence: #6c7293;
+            --color-en-cours: #39b5ff;
+            --color-vu: #0acf97;
+            --color-en-pause: #ffaa00;
+            --color-abandonne: #fa5c7c;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
@@ -36,43 +39,103 @@
             color: var(--text-main);
             min-height: 100vh;
             padding: 40px 20px;
-            display: flex;
-            justify-content: center;
         }
 
         .container {
             width: 100%;
-            max-width: 1280px;
+            max-width: 1350px;
+            margin: 0 auto;
         }
 
+        /* --- HEADER & DASHBOARD --- */
         header {
-            text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
+        }
+
+        .header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 800;
             letter-spacing: -0.05em;
-            margin-bottom: 25px;
-            background: linear-gradient(90deg, #fff, var(--text-muted));
+            background: linear-gradient(90deg, #fff, #9ca3af);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Barre de contrôle */
-        .controls-bar {
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-info .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .stat-info .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* --- BARRE DE CONTROLE & FILTRES --- */
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--card-border);
+            padding: 20px;
+            border-radius: 16px;
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            justify-content: center;
             align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-filters-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            flex: 1;
+            max-width: 800px;
         }
 
         .search-wrapper {
             position: relative;
-            flex: 1;
-            max-width: 450px;
+            flex: 2;
+            min-width: 250px;
         }
 
         .search-wrapper i {
@@ -83,29 +146,40 @@
             color: var(--text-muted);
         }
 
-        input[type="text"] {
+        input[type="text"], .filter-select {
             width: 100%;
-            padding: 14px 16px 14px 45px;
-            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 16px 12px 45px;
+            background: #1c1c2d;
             border: 1px solid var(--card-border);
-            border-radius: 12px;
+            border-radius: 10px;
             color: white;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.3s;
+            outline: none;
         }
 
-        input[type="text"]:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.08);
+        .filter-select {
+            padding-left: 16px;
+            flex: 1;
+            min-width: 150px;
+            cursor: pointer;
+        }
+
+        input[type="text"]:focus, .filter-select:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(94, 114, 228, 0.15);
+            box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.15);
+        }
+
+        .data-buttons {
+            display: flex;
+            gap: 10px;
         }
 
         .btn {
-            padding: 14px 20px;
-            border-radius: 12px;
+            padding: 12px 18px;
+            border-radius: 10px;
             border: 1px solid transparent;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             display: inline-flex;
@@ -114,30 +188,24 @@
             transition: all 0.2s;
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--card-border);
-            color: var(--text-main);
-        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-secondary { background: #1c1c2d; border-color: var(--card-border); color: var(--text-main); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: #4b4b63; }
 
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--text-muted);
-        }
-
-        /* Fenêtre flottante des résultats */
+        /* --- FENÊTRE RECHERCHE FLOUTÉE --- */
         .search-results {
             position: absolute;
             top: calc(100% + 8px);
             left: 0;
             right: 0;
-            background: #161622;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #161624;
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 12px;
-            max-height: 380px;
+            max-height: 400px;
             overflow-y: auto;
             z-index: 100;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
         }
 
         .search-item {
@@ -146,55 +214,43 @@
             padding: 12px 16px;
             cursor: pointer;
             gap: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             transition: background 0.2s;
         }
 
-        .search-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
+        .search-item:hover { background: rgba(255, 255, 255, 0.05); }
+        .search-item img { width: 45px; height: 65px; object-fit: cover; border-radius: 6px; }
+        .search-item .info-box { display: flex; flex-direction: column; gap: 4px; }
+        .search-item .title { font-weight: 600; font-size: 0.95rem; color: #fff; }
+        .search-item .meta { font-size: 0.8rem; color: var(--text-muted); }
 
-        .search-item img {
-            width: 45px;
-            height: 65px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
-
-        .search-item .title {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        /* Grille principale */
+        /* --- GRILLE PRINCIPALE & CARTES --- */
         .anime-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
         }
 
-        /* Design des Cartes d'Anime */
         .anime-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 20px;
+            border-radius: 18px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(10px);
             transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
         }
 
         .anime-card:hover {
             transform: translateY(-5px);
             border-color: var(--card-hover-border);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
         }
 
         .anime-cover-wrapper {
             position: relative;
-            height: 220px;
+            height: 240px;
             width: 100%;
             overflow: hidden;
         }
@@ -206,60 +262,69 @@
             transition: transform 0.5s;
         }
 
-        .anime-card:hover .anime-cover-wrapper img {
-            transform: scale(1.04);
-        }
+        .anime-card:hover .anime-cover-wrapper img { transform: scale(1.05); }
 
-        /* Ombre douce sur l'image */
         .anime-cover-wrapper::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 60%;
-            background: linear-gradient(to top, rgba(21, 21, 30, 1), rgba(21, 21, 30, 0));
+            height: 70%;
+            background: linear-gradient(to top, var(--card-bg) 0%, rgba(23, 23, 37, 0) 100%);
+        }
+
+        /* Badge Statut flottant visuel */
+        .status-badge-pill {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 2;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         .anime-content {
-            padding: 24px;
+            padding: 22px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
             gap: 16px;
-            background: #15151e;
         }
 
         .anime-title {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 700;
             line-height: 1.4;
             color: #fff;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 44px;
         }
 
         .anime-synopsis {
             font-size: 0.85rem;
-            color: var(--text-muted);
+            color: #9292af;
             line-height: 1.6;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
             cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .anime-synopsis:hover {
-            color: var(--text-main);
         }
         
-        .anime-synopsis.expanded {
-            -webkit-line-clamp: unset;
-        }
+        .anime-synopsis.expanded { -webkit-line-clamp: unset; }
 
-        /* CORRECTION DU SELECTEUR (SÉLECTION DE STATUT) */
-        .status-select {
-            background: rgba(255, 255, 255, 0.05);
+        /* Customiseur du Select */
+        .status-select-custom {
+            background: #222235;
             border: 1px solid var(--card-border);
             color: var(--text-main);
             padding: 12px;
@@ -269,22 +334,10 @@
             cursor: pointer;
             outline: none;
             font-size: 0.85rem;
-            transition: all 0.2s;
         }
+        .status-select-custom option { background: #171725; color: white; }
 
-        .status-select:focus {
-            border-color: var(--accent);
-            background: var(--select-dropdown-bg);
-        }
-
-        /* Forcer les couleurs du menu qui s'ouvre */
-        .status-select option {
-            background-color: var(--select-dropdown-bg);
-            color: var(--text-main);
-            padding: 12px;
-        }
-
-        /* Fix complet du système de notation en étoiles */
+        /* Zone d'Étoiles de notation */
         .rating-block {
             display: flex;
             align-items: center;
@@ -295,10 +348,7 @@
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
 
-        .stars-container {
-            display: inline-flex;
-            gap: 4px;
-        }
+        .stars-container { display: inline-flex; gap: 4px; }
 
         .star-item {
             width: 22px;
@@ -309,43 +359,25 @@
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
             transition: transform 0.1s;
         }
+        .star-item:hover { transform: scale(1.2); }
 
-        .star-item:hover {
-            transform: scale(1.15);
-        }
-
-        .rating-value {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
-
-        /* Actions du bas */
-        .card-actions {
-            margin-top: auto;
-            padding-top: 10px;
-        }
+        .rating-value { font-size: 0.85rem; font-weight: 700; color: #fff; }
 
         .delete-btn {
             width: 100%;
-            background: rgba(250, 92, 124, 0.1);
-            border: 1px solid rgba(250, 92, 124, 0.2);
+            background: rgba(250, 92, 124, 0.08);
+            border: 1px solid rgba(250, 92, 124, 0.15);
             color: var(--danger);
             justify-content: center;
         }
-
-        .delete-btn:hover {
-            background: var(--danger);
-            color: white;
-        }
+        .delete-btn:hover { background: var(--danger); color: white; }
 
         /* Responsive */
-        @media (max-width: 650px) {
-            body { padding: 20px 10px; }
-            h1 { font-size: 2rem; }
-            .controls-bar { flex-direction: column; align-items: stretch; }
-            .search-wrapper { max-width: 100%; }
-            .anime-grid { grid-template-columns: 1fr; gap: 20px; }
+        @media (max-width: 850px) {
+            .controls-panel { flex-direction: column; align-items: stretch; }
+            .search-filters-group { flex-direction: column; }
+            .data-buttons { justify-content: space-between; }
+            .btn { flex: 1; justify-content: center; }
         }
     </style>
 </head>
@@ -353,16 +385,59 @@
 
 <div class="container">
     <header>
-        <h1>My Anime Tracker</h1>
-        <div class="controls-bar">
-            <div class="search-wrapper">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="search-input" placeholder="Rechercher un anime...">
-                <div id="search-results" class="search-results" style="display: none;"></div>
+        <div class="header-main">
+            <h1>My Anime Tracker <span style="font-size:1.2rem; color:var(--accent)">v2.0</span></h1>
+            <div class="data-buttons">
+                <button class="btn btn-secondary" onclick="exportData('json')"><i class="fa-solid fa-code"></i> Export JSON</button>
+                <button class="btn btn-secondary" onclick="exportData('csv')"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+                <button class="btn btn-primary" onclick="document.getElementById('import-file').click()"><i class="fa-solid fa-file-import"></i> Importer (.json/.csv)</button>
+                <input type="file" id="import-file" style="display: none;" accept=".json,.csv" onchange="importData(event)">
             </div>
-            <button class="btn btn-secondary" onclick="exportJSON()"><i class="fa-solid fa-download"></i> Exporter</button>
-            <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()"><i class="fa-solid fa-upload"></i> Importer</button>
-            <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importJSON(event)">
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="color: #fff"><i class="fa-solid fa-film"></i></div>
+                <div class="stat-info"><div class="stat-value" id="stat-total">0</div><div class="stat-label">Total suivis</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="color: var(--color-en-cours)"><i class="fa-solid fa-play"></i></div>
+                <div class="stat-info"><div class="stat-value" id="stat-watching">0</div><div class="stat-label">En cours</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="color: var(--color-vu)"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="stat-info"><div class="stat-value" id="stat-completed">0</div><div class="stat-label">Terminés</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="color: var(--star-color)"><i class="fa-solid fa-star"></i></div>
+                <div class="stat-info"><div class="stat-value" id="stat-average">0.0</div><div class="stat-label">Note Moyenne</div></div>
+            </div>
+        </div>
+
+        <div class="controls-panel">
+            <div class="search-filters-group">
+                <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-input" placeholder="Rechercher un anime via l'API...">
+                    <div id="search-results" class="search-results" style="display: none;"></div>
+                </div>
+                
+                <select id="filter-status" class="filter-select" onchange="renderList()">
+                    <option value="Tous">📊 Tous les statuts</option>
+                    <option value="Pas commencé">⏳ Pas commencé</option>
+                    <option value="En cours">👀 En cours</option>
+                    <option value="Vu">✅ Vu</option>
+                    <option value="En pause">⏸️ En pause</option>
+                    <option value="Abandonné">❌ Abandonné</option>
+                </select>
+
+                <select id="sort-by" class="filter-select" onchange="renderList()">
+                    <option value="date-desc">📅 Ajout (Récents)</option>
+                    <option value="rating-desc">⭐ Note (Décroissante)</option>
+                    <option value="rating-asc">⭐ Note (Croissante)</option>
+                    <option value="title-asc">🔤 Titre (A-Z)</option>
+                </select>
+            </div>
         </div>
     </header>
 
@@ -372,45 +447,49 @@
 </div>
 
 <script>
-    let myAnimes = JSON.parse(localStorage.getItem('myAnimes')) || [];
+    let myAnimes = JSON.parse(localStorage.getItem('myAnimesPro')) || [];
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
     const animeListContainer = document.getElementById('anime-list');
 
-    // --- RECHERCHE (API Jikan) ---
+    // Mappage couleur pour les badges
+    const statusColors = {
+        "Pas commencé": "var(--color-pas-commence)",
+        "En cours": "var(--color-en-cours)",
+        "Vu": "var(--color-vu)",
+        "En pause": "var(--color-en-pause)",
+        "Abandonné": "var(--color-abandonne)"
+    };
+
+    // --- RECHERCHE JIKAN API V4 ---
     let debounceTimer;
     searchInput.addEventListener('input', () => {
         clearTimeout(debounceTimer);
         const query = searchInput.value.trim();
-        if (query.length < 3) {
-            searchResults.style.display = 'none';
-            return;
-        }
+        if (query.length < 3) { searchResults.style.display = 'none'; return; }
 
         debounceTimer = setTimeout(async () => {
             try {
-                const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=5`);
+                const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=6`);
                 const data = await response.json();
                 displaySearchResults(data.data);
-            } catch (error) {
-                console.error("Erreur API:", error);
-            }
+            } catch (error) { console.error("Erreur API:", error); }
         }, 400);
     });
 
     function displaySearchResults(animes) {
         searchResults.innerHTML = '';
-        if (!animes || animes.length === 0) {
-            searchResults.style.display = 'none';
-            return;
-        }
+        if (!animes || animes.length === 0) { searchResults.style.display = 'none'; return; }
 
         animes.forEach(anime => {
             const div = document.createElement('div');
             div.className = 'search-item';
             div.innerHTML = `
                 <img src="${anime.images.jpg.image_url}" alt="">
-                <span class="title">${anime.title}</span>
+                <div class="info-box">
+                    <span class="title">${anime.title}</span>
+                    <span class="meta">${anime.type || 'TV'} • ${anime.episodes || '?'} éps • Étoiles globales : ${anime.score || '?'}</span>
+                </div>
             `;
             div.onclick = () => addAnime(anime);
             searchResults.appendChild(div);
@@ -418,20 +497,29 @@
         searchResults.style.display = 'block';
     }
 
-    // --- LOGIQUE APPLICATION ---
+    // --- SYSTEME COMPTEURS STATS ---
+    function updateDashboard() {
+        document.getElementById('stat-total').innerText = myAnimes.length;
+        document.getElementById('stat-watching').innerText = myAnimes.filter(a => a.status === 'En cours').length;
+        document.getElementById('stat-completed').innerText = myAnimes.filter(a => a.status === 'Vu').length;
+        
+        const ratedAnimes = myAnimes.filter(a => a.rating > 0);
+        const avg = ratedAnimes.length ? (ratedAnimes.reduce((sum, a) => sum + a.rating, 0) / ratedAnimes.length).toFixed(1) : "0.0";
+        document.getElementById('stat-average').innerText = avg;
+    }
+
+    // --- FONCTIONS CRUD ---
     function addAnime(apiAnime) {
-        if (myAnimes.some(a => a.id === apiAnime.mal_id)) {
-            alert("Cet anime est déjà présent.");
-            return;
-        }
+        if (myAnimes.some(a => a.id === apiAnime.mal_id)) { alert("Anime déjà ajouté."); return; }
 
         const newAnime = {
             id: apiAnime.mal_id,
             title: apiAnime.title,
             image: apiAnime.images.jpg.image_url,
-            synopsis: apiAnime.synopsis || "Aucune description fournie.",
+            synopsis: apiAnime.synopsis || "Pas de synopsis.",
             status: "Pas commencé",
-            rating: 0
+            rating: 0,
+            addedAt: Date.now()
         };
 
         myAnimes.push(newAnime);
@@ -451,58 +539,68 @@
     }
 
     function deleteAnime(id) {
-        myAnimes = myAnimes.filter(a => a.id !== id);
-        saveAndRender();
+        if(confirm("Supprimer cet anime de ta liste ?")) {
+            myAnimes = myAnimes.filter(a => a.id !== id);
+            saveAndRender();
+        }
     }
 
     function saveAndRender() {
-        localStorage.setItem('myAnimes', JSON.stringify(myAnimes));
+        localStorage.setItem('myAnimesPro', JSON.stringify(myAnimes));
         renderList();
     }
 
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('#search-input') && !e.target.closest('#search-results')) {
-            searchResults.style.display = 'none';
-        }
-    });
-
-    // --- RENDU DES CARTES ---
+    // --- RENDU AVEC FILTRE ET TRI ---
     function renderList() {
+        updateDashboard();
         animeListContainer.innerHTML = '';
         
-        if (myAnimes.length === 0) {
-            animeListContainer.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:var(--text-muted); margin-top:40px;">Aucun anime suivi. Utilisez la barre de recherche !</p>`;
+        const activeFilter = document.getElementById('filter-status').value;
+        const activeSort = document.getElementById('sort-by').value;
+
+        // Étape 1: Filtrage
+        let filteredList = myAnimes.filter(anime => activeFilter === "Tous" || anime.status === activeFilter);
+
+        // Étape 2: Tri
+        filteredList.sort((a, b) => {
+            if (activeSort === 'rating-desc') return b.rating - a.rating;
+            if (activeSort === 'rating-asc') return a.rating - b.rating;
+            if (activeSort === 'title-asc') return a.title.localeCompare(b.title);
+            return b.addedAt - a.addedAt; // date-desc par défaut
+        });
+
+        if (filteredList.length === 0) {
+            animeListContainer.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:60px 0;"><i class="fa-solid fa-folder-open" style="font-size:3rem; margin-bottom:15px; display:block;"></i>Aucun anime ne correspond à vos critères.</div>`;
             return;
         }
 
-        myAnimes.forEach(anime => {
+        filteredList.forEach(anime => {
             const card = document.createElement('div');
             card.className = 'anime-card';
 
             let starsHTML = '';
             for (let i = 1; i <= 5; i++) {
                 let fillPercent = 0;
-                if (anime.rating >= i) {
-                    fillPercent = 100;
-                } else if (anime.rating === i - 0.5) {
-                    fillPercent = 50;
-                }
+                if (anime.rating >= i) fillPercent = 100;
+                else if (anime.rating === i - 0.5) fillPercent = 50;
 
-                const starStyle = `background: linear-gradient(90deg, var(--star-color) ${fillPercent}%, #374151 ${fillPercent}%);`;
-                starsHTML += `<div class="star-item" style="${starStyle}" onclick="handleStarClick(${anime.id}, ${i}, event)"></div>`;
+                starsHTML += `<div class="star-item" style="background: linear-gradient(90deg, var(--star-color) ${fillPercent}%, #374151 ${fillPercent}%);" onclick="handleStarClick(${anime.id}, ${i}, event)"></div>`;
             }
+
+            const currentBadgeColor = statusColors[anime.status] || "gray";
 
             card.innerHTML = `
                 <div class="anime-cover-wrapper">
+                    <span class="status-badge-pill" style="background:${currentBadgeColor}; color:#111;">${anime.status}</span>
                     <img src="${anime.image}" alt="">
                 </div>
                 <div class="anime-content">
-                    <div class="anime-title">${anime.title}</div>
+                    <div class="anime-title" title="${anime.title}">${anime.title}</div>
                     <div class="anime-synopsis" onclick="this.classList.toggle('expanded')" title="Cliquez pour étendre">
                         ${anime.synopsis}
                     </div>
                     
-                    <select class="status-select" onchange="changeStatus(${anime.id}, this.value)">
+                    <select class="status-select-custom" onchange="changeStatus(${anime.id}, this.value)">
                         <option value="Pas commencé" ${anime.status === 'Pas commencé' ? 'selected' : ''}>⏳ Pas commencé</option>
                         <option value="En cours" ${anime.status === 'En cours' ? 'selected' : ''}>👀 En cours</option>
                         <option value="Vu" ${anime.status === 'Vu' ? 'selected' : ''}>✅ Vu</option>
@@ -515,9 +613,7 @@
                         <span class="rating-value">${anime.rating} / 5</span>
                     </div>
 
-                    <div class="card-actions">
-                        <button class="btn delete-btn" onclick="deleteAnime(${anime.id})"><i class="fa-solid fa-trash-can"></i> Supprimer</button>
-                    </div>
+                    <button class="btn delete-btn" onclick="deleteAnime(${anime.id})"><i class="fa-solid fa-trash-can"></i> Retirer</button>
                 </div>
             `;
             animeListContainer.appendChild(card);
@@ -526,47 +622,96 @@
 
     function handleStarClick(animeId, starIndex, event) {
         const rect = event.target.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const isHalf = clickX < (rect.width / 2);
-        
+        const isHalf = (event.clientX - rect.left) < (rect.width / 2);
         let finalRating = isHalf ? starIndex - 0.5 : starIndex;
         
-        const currentAnime = myAnimes.find(a => a.id === animeId);
-        if (currentAnime && currentAnime.rating === finalRating) {
-            finalRating = 0;
-        }
+        const current = myAnimes.find(a => a.id === animeId);
+        if (current && current.rating === finalRating) finalRating = 0;
 
         changeRating(animeId, finalRating);
     }
 
-    // --- FONCTIONS JSON ---
-    function exportJSON() {
-        if (myAnimes.length === 0) return alert("Rien à exporter.");
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(myAnimes, null, 2));
+    // --- IMPORT / EXPORT AVANCÉ (JSON ET CSV) ---
+    function exportData(format) {
+        if (myAnimes.length === 0) return alert("Aucune donnée à exporter.");
+        
+        let dataStr = "";
+        let filename = `mon_anime_tracker_${Date.now()}`;
+
+        if (format === 'json') {
+            dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(myAnimes, null, 2));
+            filename += ".json";
+        } else if (format === 'csv') {
+            // Création des lignes du tableur CSV
+            let csvContent = "id,title,status,rating,addedAt\n";
+            myAnimes.forEach(a => {
+                // Remplacement des virgules ou guillemets pour éviter de casser le fichier CSV
+                let safeTitle = a.title.replace(/"/g, '""');
+                csvContent += `${a.id},"${safeTitle}","${a.status}",${a.rating},${a.addedAt}\n`;
+            });
+            dataStr = "data:text/csv;charset=utf-8,\uFEFF" + encodeURIComponent(csvContent);
+            filename += ".csv";
+        }
+
         const dlAnchor = document.createElement('a');
         dlAnchor.setAttribute("href", dataStr);
-        dlAnchor.setAttribute("download", "mon_anime_tracker.json");
+        dlAnchor.setAttribute("download", filename);
         document.body.appendChild(dlAnchor);
         dlAnchor.click();
         dlAnchor.remove();
     }
 
-    function importJSON(event) {
+    function importData(event) {
         const file = event.target.files[0];
         if (!file) return;
 
         const reader = new FileReader();
+        const extension = file.name.split('.').pop().toLowerCase();
+
         reader.onload = function(e) {
             try {
-                const importedData = JSON.parse(e.target.result);
-                if (Array.isArray(importedData)) {
-                    myAnimes = importedData;
-                    saveAndRender();
-                } else { alert("Format invalide."); }
-            } catch (err) { alert("Erreur de lecture."); }
+                if (extension === 'json') {
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) { myAnimes = imported; saveAndRender(); }
+                    else { alert("Format JSON invalide."); }
+                } 
+                else if (extension === 'csv') {
+                    const lines = e.target.result.split('\n');
+                    let parsedAnimes = [];
+                    // Sauter la ligne d'en-tête
+                    for(let i = 1; i < lines.length; i++) {
+                        if(!lines[i].trim()) continue;
+                        // Regex simple pour découper les colonnes CSV en ignorant les virgules dans le titre entre guillemets
+                        const matches = lines[i].match(/(\d+),"(.+)",(.+),([\d.]+),(\d+)/);
+                        if(matches) {
+                            parsedAnimes.push({
+                                id: parseInt(matches[1]),
+                                title: matches[2].replace(/""/g, '"'),
+                                image: "https://via.placeholder.com/225x320?text=Importé", // fallback image standard
+                                synopsis: "Anime réimporté via CSV.",
+                                status: matches[3].replace(/"/g, ''),
+                                rating: parseFloat(matches[4]),
+                                addedAt: parseInt(matches[5])
+                            });
+                        }
+                    }
+                    if(parsedAnimes.length > 0) {
+                        if(confirm(`Importer ${parsedAnimes.length} animes depuis le CSV ? (Cela écrasera la liste actuelle)`)){
+                            myAnimes = parsedAnimes;
+                            saveAndRender();
+                        }
+                    } else { alert("Fichier CSV illisible ou vide."); }
+                }
+            } catch (err) { alert("Erreur lors de la lecture du fichier."); }
         };
         reader.readAsText(file);
     }
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#search-input') && !e.target.closest('#search-results')) {
+            searchResults.style.display = 'none';
+        }
+    });
 
     renderList();
 </script>
