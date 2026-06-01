@@ -70,7 +70,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* --- NOUVELLES STATISTIQUES COLOREES & ANIMEES --- */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -96,7 +95,6 @@
             box-shadow: 0 12px 25px rgba(0,0,0,0.3);
         }
 
-        /* Fonds dégradés colorés distinctifs pour chaque stat */
         .stat-card.total { background: linear-gradient(135deg, #1e1e38 0%, #2b2b54 100%); }
         .stat-card.watching { background: linear-gradient(135deg, #0f2b48 0%, #1a4473 100%); }
         .stat-card.completed { background: linear-gradient(135deg, #053429 0%, #0d5443 100%); }
@@ -112,7 +110,6 @@
             font-size: 1.4rem;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(5px);
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.2);
         }
 
         .stat-card.total .stat-icon { color: #8a99ff; }
@@ -120,28 +117,21 @@
         .stat-card.completed .stat-icon { color: #10f0b6; }
         .stat-card.average .stat-icon { color: #ffca28; }
 
-        .stat-info {
-            display: flex;
-            flex-direction: column;
-        }
-
         .stat-info .stat-value {
             font-size: 1.8rem;
             font-weight: 800;
             color: #fff;
             line-height: 1.1;
             margin-bottom: 2px;
-            transition: all 0.3s ease;
         }
 
         .stat-info .stat-label {
             font-size: 0.85rem;
             color: rgba(255, 255, 255, 0.6);
             font-weight: 600;
-            letter-spacing: 0.02em;
         }
 
-        /* --- BARRE DE CONTROLE & FILTRES --- */
+        /* --- CONTROLES --- */
         .controls-panel {
             background: rgba(255, 255, 255, 0.01);
             border: 1px solid var(--card-border);
@@ -200,10 +190,7 @@
             box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.15);
         }
 
-        .data-buttons {
-            display: flex;
-            gap: 10px;
-        }
+        .data-buttons { display: flex; gap: 10px; }
 
         .btn {
             padding: 12px 18px;
@@ -221,9 +208,9 @@
         .btn-primary { background: var(--accent); color: white; }
         .btn-primary:hover { background: var(--accent-hover); }
         .btn-secondary { background: #1c1c2d; border-color: var(--card-border); color: var(--text-main); }
-        .btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: #4b4b63; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.05); }
 
-        /* --- FENÊTRE RECHERCHE FLOUTÉE --- */
+        /* --- RECHERCHE --- */
         .search-results {
             position: absolute;
             top: calc(100% + 8px);
@@ -245,7 +232,6 @@
             cursor: pointer;
             gap: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            transition: background 0.2s;
         }
 
         .search-item:hover { background: rgba(255, 255, 255, 0.05); }
@@ -254,7 +240,7 @@
         .search-item .title { font-weight: 600; font-size: 0.95rem; color: #fff; }
         .search-item .meta { font-size: 0.8rem; color: var(--text-muted); }
 
-        /* --- GRILLE PRINCIPALE & CARTES --- */
+        /* --- CARTES --- */
         .anime-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -289,10 +275,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s;
         }
-
-        .anime-card:hover .anime-cover-wrapper img { transform: scale(1.05); }
 
         .anime-cover-wrapper::after {
             content: '';
@@ -313,9 +296,7 @@
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
             z-index: 2;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         .anime-content {
@@ -351,6 +332,68 @@
         
         .anime-synopsis.expanded { -webkit-line-clamp: unset; }
 
+        /* OPTION 2 : DESIGN DU COMPTEUR D'ÉPISODES */
+        .episode-tracker {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 14px;
+            border-radius: 12px;
+        }
+
+        .episode-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .episode-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ep-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: none;
+            background: #2a2a3d;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .ep-btn:hover { background: var(--accent); }
+        .ep-btn:active { transform: scale(0.9); }
+
+        .episode-display {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #fff;
+            min-width: 55px;
+            text-align: center;
+        }
+
+        .ep-total-input {
+            width: 32px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed var(--text-muted);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: center;
+            outline: none;
+        }
+
+        /* --- COMPOSANTS DE NOTATION --- */
         .status-select-custom {
             background: #222235;
             border: 1px solid var(--card-border);
@@ -384,9 +427,7 @@
             background: #374151;
             display: inline-block;
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            transition: transform 0.1s;
         }
-        .star-item:hover { transform: scale(1.2); }
 
         .rating-value { font-size: 0.85rem; font-weight: 700; color: #fff; }
 
@@ -402,8 +443,6 @@
         @media (max-width: 850px) {
             .controls-panel { flex-direction: column; align-items: stretch; }
             .search-filters-group { flex-direction: column; }
-            .data-buttons { justify-content: space-between; }
-            .btn { flex: 1; justify-content: center; }
         }
     </style>
 </head>
@@ -412,7 +451,7 @@
 <div class="container">
     <header>
         <div class="header-main">
-            <h1>My Anime Tracker <span style="font-size:1.2rem; color:var(--accent)">v2.1</span></h1>
+            <h1>My Anime Tracker <span style="font-size:1.2rem; color:var(--accent)">v2.2</span></h1>
             <div class="data-buttons">
                 <button class="btn btn-secondary" onclick="exportData('json')"><i class="fa-solid fa-code"></i> Export JSON</button>
                 <button class="btn btn-secondary" onclick="exportData('csv')"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
@@ -424,19 +463,19 @@
         <div class="stats-grid">
             <div class="stat-card total">
                 <div class="stat-icon"><i class="fa-solid fa-film"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-total" data-target="0">0</div><div class="stat-label">Total suivis</div></div>
+                <div class="stat-info"><div class="stat-value" id="stat-total">0</div><div class="stat-label">Total suivis</div></div>
             </div>
             <div class="stat-card watching">
                 <div class="stat-icon"><i class="fa-solid fa-play"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-watching" data-target="0">0</div><div class="stat-label">En cours</div></div>
+                <div class="stat-info"><div class="stat-value" id="stat-watching">0</div><div class="stat-label">En cours</div></div>
             </div>
             <div class="stat-card completed">
                 <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-completed" data-target="0">0</div><div class="stat-label">Terminés</div></div>
+                <div class="stat-info"><div class="stat-value" id="stat-completed">0</div><div class="stat-label">Terminés</div></div>
             </div>
             <div class="stat-card average">
                 <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-average" data-target="0.0">0.0</div><div class="stat-label">Note Moyenne</div></div>
+                <div class="stat-info"><div class="stat-value" id="stat-average">0.0</div><div class="stat-label">Note Moyenne</div></div>
             </div>
         </div>
 
@@ -526,40 +565,30 @@
     function animateCounter(id, targetValue, isFloat = false) {
         const el = document.getElementById(id);
         const startValue = parseFloat(el.innerText) || 0;
-        const duration = 800; // Durée de l'animation en millisecondes
+        const duration = 600;
         let startTime = null;
 
         function step(timestamp) {
             if (!startTime) startTime = timestamp;
             const progress = Math.min((timestamp - startTime) / duration, 1);
-            
-            // Calcul de la valeur actuelle avec interpolation fluide (easeOutQuad)
             const easeProgress = progress * (2 - progress);
             const currentValue = startValue + (targetValue - startValue) * easeProgress;
 
             el.innerText = isFloat ? currentValue.toFixed(1) : Math.floor(currentValue);
 
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            } else {
-                el.innerText = isFloat ? targetValue.toFixed(1) : targetValue;
-            }
+            if (progress < 1) window.requestAnimationFrame(step);
+            else el.innerText = isFloat ? targetValue.toFixed(1) : targetValue;
         }
         window.requestAnimationFrame(step);
     }
 
     function updateDashboard() {
-        const total = myAnimes.length;
-        const watching = myAnimes.filter(a => a.status === 'En cours').length;
-        const completed = myAnimes.filter(a => a.status === 'Vu').length;
+        animateCounter('stat-total', myAnimes.length);
+        animateCounter('stat-watching', myAnimes.filter(a => a.status === 'En cours').length);
+        animateCounter('stat-completed', myAnimes.filter(a => a.status === 'Vu').length);
         
         const ratedAnimes = myAnimes.filter(a => a.rating > 0);
         const avg = ratedAnimes.length ? parseFloat((ratedAnimes.reduce((sum, a) => sum + a.rating, 0) / ratedAnimes.length).toFixed(1)) : 0.0;
-
-        // Déclencher les animations de compteur distinctes
-        animateCounter('stat-total', total);
-        animateCounter('stat-watching', watching);
-        animateCounter('stat-completed', completed);
         animateCounter('stat-average', avg, true);
     }
 
@@ -574,6 +603,8 @@
             synopsis: apiAnime.synopsis || "Pas de synopsis.",
             status: "Pas commencé",
             rating: 0,
+            currentEpisode: 0,
+            totalEpisodes: apiAnime.episodes || 12, // 12 par défaut si inconnu
             addedAt: Date.now()
         };
 
@@ -583,8 +614,66 @@
         searchResults.style.display = 'none';
     }
 
+    // OPTION 2 : GESTION DES ÉPISODES INTERACTIFS
+    function updateEpisode(id, increment) {
+        myAnimes = myAnimes.map(anime => {
+            if (anime.id === id) {
+                let current = (anime.currentEpisode || 0) + increment;
+                let total = anime.totalEpisodes || 12;
+
+                // Limiter entre 0 et le maximum d'épisodes
+                if (current < 0) current = 0;
+                if (current > total) current = total;
+
+                let status = anime.status;
+                // Si on avance les épisodes, passer automatiquement en "En cours"
+                if (current > 0 && status === "Pas commencé") {
+                    status = "En cours";
+                }
+                // Si on atteint le max, passer automatiquement en "Vu"
+                if (current === total && total > 0) {
+                    status = "Vu";
+                }
+                // Si on repasse à 0, remettre en "Pas commencé"
+                if (current === 0 && status === "En cours") {
+                    status = "Pas commencé";
+                }
+
+                return { ...anime, currentEpisode: current, status: status };
+            }
+            return anime;
+        });
+        saveAndRender();
+    }
+
+    function changeTotalEpisodes(id, newTotal) {
+        let total = parseInt(newTotal) || 0;
+        if (total < 1) total = 1;
+        
+        myAnimes = myAnimes.map(anime => {
+            if (anime.id === id) {
+                let current = anime.currentEpisode || 0;
+                if (current > total) current = total;
+                let status = (current === total) ? "Vu" : anime.status;
+                return { ...anime, totalEpisodes: total, currentEpisode: current, status: status };
+            }
+            return anime;
+        });
+        saveAndRender();
+    }
+
     function changeStatus(id, newStatus) {
-        myAnimes = myAnimes.map(a => a.id === id ? { ...a, status: newStatus } : a);
+        myAnimes = myAnimes.map(anime => {
+            if (anime.id === id) {
+                let current = anime.currentEpisode || 0;
+                // Si l'utilisateur force le statut "Vu", on met les épisodes au max
+                if (newStatus === "Vu") current = anime.totalEpisodes || 12;
+                // Si l'utilisateur remet en "Pas commencé", on remet à 0
+                if (newStatus === "Pas commencé") current = 0;
+                return { ...anime, status: newStatus, currentEpisode: current };
+            }
+            return anime;
+        });
         saveAndRender();
     }
 
@@ -641,6 +730,8 @@
             }
 
             const currentBadgeColor = statusColors[anime.status] || "gray";
+            const currentEp = anime.currentEpisode || 0;
+            const totalEp = anime.totalEpisodes || 12;
 
             card.innerHTML = `
                 <div class="anime-cover-wrapper">
@@ -653,6 +744,18 @@
                         ${anime.synopsis}
                     </div>
                     
+                    <div class="episode-tracker">
+                        <span class="episode-label">Progression</span>
+                        <div class="episode-controls">
+                            <button class="ep-btn" onclick="updateEpisode(${anime.id}, -1)">-</button>
+                            <div class="episode-display">
+                                <span>${currentEp}</span> / 
+                                <input type="number" class="ep-total-input" value="${totalEp}" onchange="changeTotalEpisodes(${anime.id}, this.value)" title="Modifier le total d'épisodes">
+                            </div>
+                            <button class="ep-btn" onclick="updateEpisode(${anime.id}, 1)">+</button>
+                        </div>
+                    </div>
+
                     <select class="status-select-custom" onchange="changeStatus(${anime.id}, this.value)">
                         <option value="Pas commencé" ${anime.status === 'Pas commencé' ? 'selected' : ''}>⏳ Pas commencé</option>
                         <option value="En cours" ${anime.status === 'En cours' ? 'selected' : ''}>👀 En cours</option>
@@ -694,10 +797,10 @@
             dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(myAnimes, null, 2));
             filename += ".json";
         } else if (format === 'csv') {
-            let csvContent = "id,title,status,rating,addedAt\n";
+            let csvContent = "id,title,status,rating,currentEpisode,totalEpisodes,addedAt\n";
             myAnimes.forEach(a => {
                 let safeTitle = a.title.replace(/"/g, '""');
-                csvContent += `${a.id},"${safeTitle}","${a.status}",${a.rating},${a.addedAt}\n`;
+                csvContent += `${a.id},"${safeTitle}","${a.status}",${a.rating},${a.currentEpisode || 0},${a.totalEpisodes || 12},${a.addedAt}\n`;
             });
             dataStr = "data:text/csv;charset=utf-8,\uFEFF" + encodeURIComponent(csvContent);
             filename += ".csv";
@@ -729,23 +832,23 @@
                     let parsedAnimes = [];
                     for(let i = 1; i < lines.length; i++) {
                         if(!lines[i].trim()) continue;
-                        const matches = lines[i].match(/(\d+),"(.+)",(.+),([\d.]+),(\d+)/);
-                        if(matches) {
+                        // Parsing mis à jour pour inclure les nouveaux champs d'épisodes
+                        const columns = lines[i].split(',');
+                        if(columns.length >= 5) {
                             parsedAnimes.push({
-                                id: parseInt(matches[1]),
-                                title: matches[2].replace(/""/g, '"'),
+                                id: parseInt(columns[0]),
+                                title: columns[1].replace(/"/g, ''),
                                 image: "https://via.placeholder.com/225x320?text=Importé",
-                                synopsis: "Anime réimporté via CSV.",
-                                status: matches[3].replace(/"/g, ''),
-                                rating: parseFloat(matches[4]),
-                                addedAt: parseInt(matches[5])
+                                synopsis: "Anime réimporté.",
+                                status: columns[2].replace(/"/g, ''),
+                                rating: parseFloat(columns[3]),
+                                currentEpisode: parseInt(columns[4]) || 0,
+                                totalEpisodes: parseInt(columns[5]) || 12,
+                                addedAt: parseInt(columns[6]) || Date.now()
                             });
                         }
                     }
-                    if(parsedAnimes.length > 0) {
-                        myAnimes = parsedAnimes;
-                        saveAndRender();
-                    }
+                    if(parsedAnimes.length > 0) { myAnimes = parsedAnimes; saveAndRender(); }
                 }
             } catch (err) { alert("Erreur lors de l'import."); }
         };
