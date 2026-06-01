@@ -205,14 +205,16 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            width: 38px;
+            padding: 8px 14px;
             height: 38px;
             border-radius: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.95rem;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
             transition: all 0.2s;
         }
 
@@ -271,7 +273,7 @@
         .search-item .title { font-weight: 600; font-size: 0.95rem; color: #fff; }
         .search-item .meta { font-size: 0.8rem; color: var(--text-muted); }
 
-        /* --- MODE GRILLE (PAR DÉFAUT) --- */
+        /* --- MODE GRILLE --- */
         .anime-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -319,7 +321,7 @@
         .anime-grid .anime-synopsis { font-size: 0.85rem; color: #9292af; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
         .anime-grid .anime-synopsis.expanded { -webkit-line-clamp: unset; }
 
-        /* --- 🛠️ FIX COMPLET : MODE LISTE / TABLEAU PREMIUM --- */
+        /* --- MODE LISTE / TABLEAU PREMIUM --- */
         .anime-grid.list-view {
             grid-template-columns: 1fr;
             gap: 12px;
@@ -379,7 +381,7 @@
             padding: 0;
             justify-content: center;
         }
-        .anime-grid.list-view .episode-label { display: none; } /* Masque le libellé encombrant */
+        .anime-grid.list-view .episode-label { display: none; } 
 
         /* Colonne 3 : Menu Sélection Statut */
         .anime-grid.list-view .status-select-custom {
@@ -423,7 +425,7 @@
             padding: 0;
             font-size: 0.9rem;
         }
-        .anime-grid.list-view .delete-btn span { display: none; } /* Masque l'écriture "Retirer" */
+        .anime-grid.list-view .delete-btn span { display: none; } 
 
         /* Affichage de la zone de commentaires en mode liste */
         .anime-grid.list-view .notes-container {
@@ -595,8 +597,12 @@
                 </select>
 
                 <div class="view-switchers">
-                    <button class="view-btn active" id="view-grid-btn" onclick="switchView('grid')" title="Mode Grille">📱 Grille</button>
-                    <button class="view-btn" id="view-list-btn" onclick="switchView('list')" title="Mode Liste Compacte">📋 Liste</button>
+                    <button class="view-btn active" id="view-grid-btn" onclick="switchView('grid')" title="Mode Grille">
+                        <i class="fa-solid fa-grid-2"></i> Grille
+                    </button>
+                    <button class="view-btn" id="view-list-btn" onclick="switchView('list')" title="Mode Liste Compacte">
+                        <i class="fa-solid fa-list"></i> Liste
+                    </button>
                 </div>
             </div>
         </div>
@@ -873,8 +879,8 @@
                     </div>
 
                     <div class="actions-row">
-                        <button class="notes-toggle-btn ${userNotes.trim() ? 'has-notes' : ''}" id="note-btn-${anime.id}" onclick="toggleNotesBlock(${anime.id})" title="Ajouter des notes/avis">
-                            💬
+                        <button class="notes-toggle-btn ${userNotes.trim() ? 'has-notes' : ''}" id="note-btn-${anime.id}" onclick="toggleNotesBlock(${anime.id})" title="Mon avis et commentaires">
+                            <i class="fa-solid fa-comment-dots"></i>
                         </button>
                         <button class="btn delete-btn" onclick="deleteAnime(${anime.id})"><i class="fa-solid fa-trash-can"></i> <span>Retirer</span></button>
                     </div>
