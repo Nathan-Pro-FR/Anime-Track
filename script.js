@@ -1,6 +1,9 @@
 let myAnimes = JSON.parse(localStorage.getItem('myAnimesPro')) || [];
 let currentLayout = 'grid';
 
+// Objet temporaire pour mémoriser quels blocs de notes sont actuellement ouverts par l'utilisateur
+const openedNotesBlocks = {};
+
 const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
 const animeListContainer = document.getElementById('anime-list');
@@ -13,28 +16,19 @@ const statusColors = {
     "Abandonné": "var(--color-abandonne)"
 };
 
-// --- LOGIQUE RECHERCHE API + FILTRAGE LOCAL ---
+// --- LOGIQUE API JIKAN ---
 let debounceTimer;
 searchInput.addEventListener('input', () => {
-    const query = searchInput.value.trim();
-    
-    // Déclenche le rendu local à chaque saisie pour filtrer dynamiquement votre collection
-    renderList();
-
     clearTimeout(debounceTimer);
-    if (query.length < 3) { 
-        searchResults.style.display = 'none'; 
-        return; 
-    }
+    const query = searchInput.value.trim();
+    if (query.length < 3) { searchResults.style.display = 'none'; return; }
 
     debounceTimer = setTimeout(async () => {
         try {
             const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=6`);
             const data = await response.json();
             displaySearchResults(data.data);
-        } catch (error) { 
-            console.error("Erreur API:", error); 
-        }
+        } catch (error) { console.error("Erreur API:", error); }
     }, 400);
 });
 
@@ -46,14 +40,13 @@ function displaySearchResults(animes) {
         const div = document.createElement('div');
         div.className = 'search-item';
         div.innerHTML = `
-                <img src="${anime.images.jpg.image_url}" alt="${anime.title}">
+                <img src="${anime.images.jpg.image_url}" alt="">
                 <div class="info-box">
                     <span class="title">${anime.title}</span>
                     <span class="meta">${anime.type || 'TV'} • ${anime.episodes || '?'} éps</span>
                 </div>
             `;
-        // Correction de la portée de l'événement onclick
-        div.addEventListener('click', () => addAnime(anime));
+        div.onclick = () => addAnime(anime);
         searchResults.appendChild(div);
     });
     searchResults.style.display = 'block';
@@ -62,8 +55,10 @@ function displaySearchResults(animes) {
 // --- COMPTEURS INCREMENTAUX ANIMÉS ---
 function animateCounter(id, targetValue, isFloat = false) {
     const el = document.getElementById(id);
-    if (!el) return; // Sécurité si l'élément n'existe pas encore
+    if (!el) return;
     const startValue = parseFloat(el.innerText) || 0;
+    if (startValue === targetValue) return; // Évite de relancer l'animation inutilement
+    
     const duration = 600;
     let startTime = null;
 
@@ -91,6 +86,7 @@ function updateDashboard() {
     animateCounter('stat-average', avg, true);
 }
 
+// --- INTERRUPTEUR DE VUE LAYOUT ---
 function switchView(view) {
     currentLayout = view;
     document.getElementById('view-grid-btn').classList.toggle('active', view === 'grid');
@@ -121,8 +117,7 @@ function addAnime(apiAnime) {
     searchResults.style.display = 'none';
 }
 
-// Rendre ces fonctions globales pour l'utilisation dans les attributs HTML inline `onclick` et `onchange`
-window.updateEpisode = function(id, increment) {
+function updateEpisode(id, increment) {
     myAnimes = myAnimes.map(anime => {
         if (anime.id === id) {
             let current = (anime.currentEpisode || 0) + increment;
@@ -140,10 +135,12 @@ window.updateEpisode = function(id, increment) {
         }
         return anime;
     });
-    saveAndRender();
-};
+    
+    // CORRECTION : Si le statut change à cause des épisodes, on doit réordonner/refiltrer, sinon un re-rendu ciblé suffit
+    saveAndRender(); 
+}
 
-window.changeTotalEpisodes = function(id, newTotal) {
+function changeTotalEpisodes(id, newTotal) {
     let total = parseInt(newTotal) || 0;
     if (total < 1) total = 1;
 
@@ -157,9 +154,9 @@ window.changeTotalEpisodes = function(id, newTotal) {
         return anime;
     });
     saveAndRender();
-};
+}
 
-window.changeStatus = function(id, newStatus) {
+function changeStatus(id, newStatus) {
     myAnimes = myAnimes.map(anime => {
         if (anime.id === id) {
             let current = anime.currentEpisode || 0;
@@ -170,49 +167,38 @@ window.changeStatus = function(id, newStatus) {
         return anime;
     });
     saveAndRender();
-};
+}
 
-window.changeRating = function(id, ratingValue) {
+function changeRating(id, ratingValue) {
     myAnimes = myAnimes.map(a => a.id === id ? { ...a, rating: ratingValue } : a);
-    saveAndRender();
-};
+    saveAndRender(); // Nécessaire car impacte la note moyenne globale et le tri
+}
 
-window.saveNotes = function(id, text) {
+function saveNotes(id, text) {
     myAnimes = myAnimes.map(anime => anime.id === id ? { ...anime, notes: text } : anime);
     localStorage.setItem('myAnimesPro', JSON.stringify(myAnimes));
-};
+    
+    // Met à jour dynamiquement la couleur du bouton de note sans recharger la carte
+    const btn = document.getElementById(`note-btn-${id}`);
+    if (btn) {
+        btn.classList.toggle('has-notes', text.trim().length > 0);
+    }
+}
 
-window.deleteAnime = function(id) {
+function deleteAnime(id) {
     if (confirm("Supprimer cet anime de ta liste ?")) {
         myAnimes = myAnimes.filter(a => a.id !== id);
+        if (openedNotesBlocks[id]) delete openedNotesBlocks[id];
         saveAndRender();
     }
-};
-
-window.handleStarClick = function(animeId, starIndex, event) {
-    const rect = event.target.getBoundingClientRect();
-    const isHalf = (event.clientX - rect.left) < (rect.width / 2);
-    let finalRating = isHalf ? starIndex - 0.5 : starIndex;
-
-    const current = myAnimes.find(a => a.id === animeId);
-    if (current && current.rating === finalRating) finalRating = 0;
-
-    window.changeRating(animeId, finalRating);
-};
-
-window.toggleNotesBlock = function(id) {
-    const block = document.getElementById(`notes-block-${id}`);
-    if (block) {
-        block.style.display = (block.style.display === 'block') ? 'none' : 'block';
-    }
-};
+}
 
 function saveAndRender() {
     localStorage.setItem('myAnimesPro', JSON.stringify(myAnimes));
     renderList();
 }
 
-// --- ALGORITHMES DE RENDU ---
+// --- ALGORITHMES DE RENDU ET INJECTION DOM ---
 function renderList() {
     updateDashboard();
     animeListContainer.innerHTML = '';
@@ -222,14 +208,8 @@ function renderList() {
 
     const activeFilter = document.getElementById('filter-status').value;
     const activeSort = document.getElementById('sort-by').value;
-    const searchQuery = searchInput.value.toLowerCase().trim();
 
-    // Application combinée du filtre de statut ET du champ de recherche textuelle
-    let filteredList = myAnimes.filter(anime => {
-        const matchesStatus = (activeFilter === "Tous" || anime.status === activeFilter);
-        const matchesSearch = anime.title.toLowerCase().includes(searchQuery);
-        return matchesStatus && matchesSearch;
-    });
+    let filteredList = myAnimes.filter(anime => activeFilter === "Tous" || anime.status === activeFilter);
 
     filteredList.sort((a, b) => {
         if (activeSort === 'rating-desc') return b.rating - a.rating;
@@ -260,11 +240,14 @@ function renderList() {
         const currentEp = anime.currentEpisode || 0;
         const totalEp = anime.totalEpisodes || 12;
         const userNotes = anime.notes || "";
+        
+        // CORRECTION : Restaure l'état d'ouverture de la boîte de note enregistré
+        const isNotesDisplayBlock = openedNotesBlocks[anime.id] ? 'display: block;' : 'display: none;';
 
         card.innerHTML = `
                 <div class="anime-cover-wrapper">
                     <span class="status-badge-pill" style="background:${currentBadgeColor}; color:#111;">${anime.status}</span>
-                    <img src="${anime.image}" alt="${anime.title}">
+                    <img src="${anime.image}" alt="">
                 </div>
                 <div class="anime-content">
                     <div class="anime-title" title="${anime.title}">${anime.title}</div>
@@ -304,7 +287,7 @@ function renderList() {
                         <button class="btn delete-btn" onclick="deleteAnime(${anime.id})"><i class="fa-solid fa-trash-can"></i> <span>Retirer</span></button>
                     </div>
 
-                    <div class="notes-container" id="notes-block-${anime.id}">
+                    <div class="notes-container" id="notes-block-${anime.id}" style="${isNotesDisplayBlock}">
                         <div class="notes-header">
                             <span>Mon avis / Notes perso :</span>
                             <i class="fa-solid fa-pen-to-square"></i>
@@ -317,8 +300,32 @@ function renderList() {
     });
 }
 
+function handleStarClick(animeId, starIndex, event) {
+    const rect = event.target.getBoundingClientRect();
+    const isHalf = (event.clientX - rect.left) < (rect.width / 2);
+    let finalRating = isHalf ? starIndex - 0.5 : starIndex;
+
+    const current = myAnimes.find(a => a.id === animeId);
+    if (current && current.rating === finalRating) finalRating = 0;
+
+    changeRating(animeId, finalRating);
+}
+
+function toggleNotesBlock(id) {
+    const block = document.getElementById(`notes-block-${id}`);
+    if (!block) return;
+    
+    if (block.style.display === 'block') {
+        block.style.display = 'none';
+        openedNotesBlocks[id] = false;
+    } else {
+        block.style.display = 'block';
+        openedNotesBlocks[id] = true;
+    }
+}
+
 // --- ENTRÉES ET SORTIES EXPORT JSON / CSV ---
-window.exportData = function(format) {
+function exportData(format) {
     if (myAnimes.length === 0) return alert("Aucune donnée à exporter.");
     let dataStr = "";
     let filename = `mon_anime_tracker_${Date.now()}`;
@@ -343,9 +350,10 @@ window.exportData = function(format) {
     document.body.appendChild(dlAnchor);
     dlAnchor.click();
     dlAnchor.remove();
-};
+}
 
-window.importData = function(event) {
+// CORRECTION : Prise en charge de l'import JSON OU de la détection CSV de base sécurisée
+function importData(event) {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -360,26 +368,52 @@ window.importData = function(event) {
                     myAnimes = imported; 
                     saveAndRender(); 
                 } else {
-                    alert("Le fichier JSON n'est pas au bon format.");
+                    alert("Le fichier JSON n'a pas un format valide.");
+                }
+            } else if (extension === 'csv') {
+                // Analyse basique d'un CSV exporté pour reconstruire le tableau d'objets
+                const lines = e.target.result.split('\n');
+                if (lines.length <= 1) return;
+                
+                const importedAnimes = [];
+                for(let i = 1; i < lines.length; i++) {
+                    if(!lines[i].trim()) continue;
+                    
+                    // Regex pour isoler les colonnes gérant les guillemets du CSV
+                    const matches = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(',');
+                    if (matches.length >= 6) {
+                        importedAnimes.push({
+                            id: parseInt(matches[0]),
+                            title: matches[1].replace(/^"|"$/g, '').replace(/""/g, '"'),
+                            status: matches[2].replace(/^"|"$/g, ''),
+                            rating: parseFloat(matches[3]),
+                            currentEpisode: parseInt(matches[4]),
+                            totalEpisodes: parseInt(matches[5]),
+                            notes: matches[6] ? matches[6].replace(/^"|"$/g, '').replace(/""/g, '"') : "",
+                            addedAt: matches[7] ? parseInt(matches[7]) : Date.now()
+                        });
+                    }
+                }
+                if (importedAnimes.length > 0) {
+                    myAnimes = importedAnimes;
+                    saveAndRender();
                 }
             } else {
-                alert("Pour l'import, merci d'utiliser exclusivement un fichier au format .json.");
+                alert("Pour l'import, merci d'utiliser un fichier au format .json ou .csv.");
             }
         } catch (err) { 
-            alert("Erreur lors de la lecture ou de l'analyse du fichier."); 
+            console.error(err);
+            alert("Erreur lors de l'importation du fichier."); 
         }
     };
     reader.readAsText(file);
-};
+}
 
-// Fermer les résultats de recherche Jikan si on clique en dehors
 document.addEventListener('click', (e) => {
     if (!e.target.closest('#search-input') && !e.target.closest('#search-results')) {
         searchResults.style.display = 'none';
     }
 });
 
-// Initialisation globale au chargement
-window.switchView = switchView;
-window.renderList = renderList;
+// Lancement initial au chargement du script
 renderList();
