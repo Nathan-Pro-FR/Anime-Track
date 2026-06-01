@@ -102,6 +102,7 @@ h1 {
     background: linear-gradient(135deg, #3d2b08 0%, #61450c 100%);
 }
 
+/* --- SYSTEME DE TOOLTIPS FUSIONNÉ --- */
 .stat-icon {
     width: 52px;
     height: 52px;
@@ -112,6 +113,62 @@ h1 {
     font-size: 1.4rem;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(5px);
+    
+    /* Propriétés structurelles de l'info-bulle */
+    position: relative;
+    cursor: help;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Bulle textuelle (PC par défaut) */
+.stat-icon[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    width: max-content;
+    max-width: 220px;
+    padding: 8px 12px;
+    background-color: #1f1f2e;
+    color: var(--text-main);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 100;
+    white-space: normal;
+}
+
+/* Flèche sous la bulle */
+.stat-icon[data-tooltip]::after {
+    content: "";
+    position: absolute;
+    bottom: 112%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+    border-color: #1f1f2e transparent transparent transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 100;
+}
+
+/* Affichage au survol de la souris (PC avec support pointeur) */
+@media (hover: hover) {
+    .stat-icon[data-tooltip]:hover::before,
+    .stat-icon[data-tooltip]:hover::after {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 }
 
 .stat-card.total .stat-icon {
@@ -755,6 +812,7 @@ input[type="text"]:focus,
     color: white;
 }
 
+/* --- MEDIA QUERIES & RESPONSIVE CONFIGS --- */
 @media (max-width: 950px) {
     .controls-panel {
         flex-direction: column;
@@ -778,5 +836,42 @@ input[type="text"]:focus,
 
     .anime-grid.list-view .status-select-custom {
         max-width: none;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Grille de statistiques équilibrée à 2 colonnes sur smartphone */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 14px !important;
+    }
+
+    /* Déclencheur tactile pour l'info-bulle sur mobile (:active) */
+    .stat-icon[data-tooltip]:active::before,
+    .stat-icon[data-tooltip]:active::after {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    /* Dimensionnement optimisé pour les petits écrans tactiles */
+    .stat-icon[data-tooltip]::before {
+        max-width: 160px;
+        font-size: 0.7rem;
+        padding: 6px 10px;
+    }
+
+    /* Recalages de sécurité pour empêcher les bulles de déborder à gauche ou à droite de l'écran tactile */
+    .stat-card.total .stat-icon[data-tooltip]::before,
+    .stat-card.total .stat-icon[data-tooltip]::after,
+    .stat-card.completed .stat-icon[data-tooltip]::before,
+    .stat-card.completed .stat-icon[data-tooltip]::after {
+        left: 35%;
+    }
+
+    .stat-card.watching .stat-icon[data-tooltip]::before,
+    .stat-card.watching .stat-icon[data-tooltip]::after,
+    .stat-card.average .stat-icon[data-tooltip]::before,
+    .stat-card.average .stat-icon[data-tooltip]::after {
+        left: 65%;
     }
 }
