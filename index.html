@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Anime Tracker Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- CORRECTION : Séparation correcte de la feuille de style locale et du CDN Font Awesome -->
+    <link href="styleAnimeTrack.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -25,30 +24,31 @@
             </div>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card total">
-                <div class="stat-icon"><i class="fa-solid fa-film"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-total">0</div><div class="stat-label">Total suivis</div></div>
+            <div class="stats-grid">
+                <div class="stat-card total">
+                    <div class="stat-icon" data-tooltip="Nombre total d'animes ajoutés à votre collection"><i class="fa-solid fa-film"></i></div>
+                    <div class="stat-info"><div class="stat-value" id="stat-total">0</div><div class="stat-label">Total suivis</div></div>
+                </div>
+                <div class="stat-card watching">
+                    <div class="stat-icon" data-tooltip="Séries que vous regardez activement en ce moment"><i class="fa-solid fa-play"></i></div>
+                    <div class="stat-info"><div class="stat-value" id="stat-watching">0</div><div class="stat-label">En cours</div></div>
+                </div>
+                <div class="stat-card completed">
+                    <div class="stat-icon" data-tooltip="Animes terminés (tous les épisodes vus)"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-info"><div class="stat-value" id="stat-completed">0</div><div class="stat-label">Terminés</div></div>
+                </div>
+                <div class="stat-card average">
+                    <div class="stat-icon" data-tooltip="Moyenne générale calculée sur vos évaluations"><i class="fa-solid fa-star"></i></div>
+                    <div class="stat-info"><div class="stat-value" id="stat-average">0.0</div><div class="stat-label">Note Moyenne</div></div>
+                </div>
             </div>
-            <div class="stat-card watching">
-                <div class="stat-icon"><i class="fa-solid fa-play"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-watching">0</div><div class="stat-label">En cours</div></div>
-            </div>
-            <div class="stat-card completed">
-                <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-completed">0</div><div class="stat-label">Terminés</div></div>
-            </div>
-            <div class="stat-card average">
-                <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
-                <div class="stat-info"><div class="stat-value" id="stat-average">0.0</div><div class="stat-label">Note Moyenne</div></div>
-            </div>
-        </div>
+
 
         <div class="controls-panel">
             <div class="search-filters-group">
                 <div class="search-wrapper">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="search-input" placeholder="Rechercher un anime via l'API ou filtrez votre liste...">
+                    <input type="text" id="search-input" placeholder="Rechercher un anime via l'API...">
                     <div id="search-results" class="search-results" style="display: none;"></div>
                 </div>
 
@@ -69,8 +69,9 @@
                 </select>
 
                 <div class="view-switchers">
+                    
                     <button class="view-btn active" id="view-grid-btn" onclick="switchView('grid')" title="Mode Grille">
-                        <i class="fa-solid fa-table-cells-large"></i> Grille
+                        <i class="fa-solid fa-table-cells"></i> Grille
                     </button>
                     <button class="view-btn" id="view-list-btn" onclick="switchView('list')" title="Mode Liste Compacte">
                         <i class="fa-solid fa-list"></i> Liste
@@ -85,6 +86,7 @@
     </main>
 </div>
 
-<script src="script.js" defer></script>
+<script src="scriptAnimeTrack.js" defer></script>
+
 </body>
 </html>
