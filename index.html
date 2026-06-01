@@ -131,7 +131,7 @@
             font-weight: 600;
         }
 
-        /* --- CONTROLES --- */
+        /* --- CONTROLES & VIEWS --- */
         .controls-panel {
             background: rgba(255, 255, 255, 0.01);
             border: 1px solid var(--card-border);
@@ -149,13 +149,14 @@
             flex-wrap: wrap;
             gap: 12px;
             flex: 1;
-            max-width: 800px;
+            max-width: 950px;
+            align-items: center;
         }
 
         .search-wrapper {
             position: relative;
             flex: 2;
-            min-width: 250px;
+            min-width: 220px;
         }
 
         .search-wrapper i {
@@ -188,6 +189,35 @@
         input[type="text"]:focus, .filter-select:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.15);
+        }
+
+        /* Option 4 : Boutons Layout Switch */
+        .view-switchers {
+            display: inline-flex;
+            background: #1c1c2d;
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+        }
+
+        .view-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .view-btn.active {
+            background: var(--accent);
+            color: white;
         }
 
         .data-buttons { display: flex; gap: 10px; }
@@ -240,7 +270,7 @@
         .search-item .title { font-weight: 600; font-size: 0.95rem; color: #fff; }
         .search-item .meta { font-size: 0.8rem; color: var(--text-muted); }
 
-        /* --- CARTES --- */
+        /* --- LAYOUT OPTION 4 : MODE GRILLE --- */
         .anime-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -248,7 +278,7 @@
             margin-top: 35px;
         }
 
-        .anime-card {
+        .anime-grid .anime-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 18px;
@@ -258,191 +288,150 @@
             transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
         }
 
-        .anime-card:hover {
+        .anime-grid .anime-card:hover {
             transform: translateY(-5px);
             border-color: var(--card-hover-border);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
         }
 
-        .anime-cover-wrapper {
+        .anime-grid .anime-cover-wrapper {
             position: relative;
             height: 240px;
             width: 100%;
             overflow: hidden;
         }
 
-        .anime-cover-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .anime-cover-wrapper::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 70%;
+        .anime-grid .anime-cover-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .anime-grid .anime-cover-wrapper::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 70%;
             background: linear-gradient(to top, var(--card-bg) 0%, rgba(23, 23, 37, 0) 100%);
         }
 
-        .status-badge-pill {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            z-index: 2;
+        .anime-grid .status-badge-pill {
+            position: absolute; top: 15px; right: 15px; padding: 6px 12px;
+            border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; z-index: 2;
         }
 
-        .anime-content {
-            padding: 22px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            gap: 16px;
-        }
+        .anime-grid .anime-content { padding: 22px; display: flex; flex-direction: column; flex-grow: 1; gap: 16px; }
+        .anime-grid .anime-title { font-size: 1.1rem; font-weight: 700; line-height: 1.4; color: #fff; height: 44px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .anime-grid .anime-synopsis { font-size: 0.85rem; color: #9292af; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
+        .anime-grid .anime-synopsis.expanded { -webkit-line-clamp: unset; }
 
-        .anime-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            line-height: 1.4;
-            color: #fff;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            height: 44px;
-        }
-
-        .anime-synopsis {
-            font-size: 0.85rem;
-            color: #9292af;
-            line-height: 1.6;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        
-        .anime-synopsis.expanded { -webkit-line-clamp: unset; }
-
-        /* OPTION 2 : DESIGN DU COMPTEUR D'ÉPISODES */
-        .episode-tracker {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 10px 14px;
-            border-radius: 12px;
-        }
-
-        .episode-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .episode-controls {
-            display: flex;
-            align-items: center;
+        /* --- LAYOUT OPTION 4 : MODE LISTE / TABLEAU COMPACT --- */
+        .anime-grid.list-view {
+            grid-template-columns: 1fr;
             gap: 12px;
         }
 
-        .ep-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            border: none;
-            background: #2a2a3d;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
+        .anime-grid.list-view .anime-card {
+            flex-direction: row;
             align-items: center;
-            justify-content: center;
-            transition: background 0.2s, transform 0.1s;
+            padding: 10px 20px;
+            border-radius: 12px;
+            gap: 20px;
         }
 
+        .anime-grid.list-view .anime-cover-wrapper {
+            width: 50px; height: 70px; border-radius: 6px; flex-shrink: 0;
+        }
+        .anime-grid.list-view .anime-cover-wrapper::after { display: none; }
+        .anime-grid.list-view .status-badge-pill { display: none; } /* On le cache car on a déjà le select coloré */
+
+        .anime-grid.list-view .anime-content {
+            padding: 0; flex-direction: row; align-items: center; width: 100%; justify-content: space-between; gap: 20px;
+        }
+
+        .anime-grid.list-view .anime-title { height: auto; -webkit-line-clamp: 1; min-width: 200px; flex: 2; }
+        .anime-grid.list-view .anime-synopsis { display: none; } /* Caché en mode liste compacte */
+        
+        .anime-grid.list-view .episode-tracker { min-width: 160px; flex: 1; background: transparent; border: none; padding: 0; }
+        .anime-grid.list-view .status-select-custom { max-width: 160px; flex: 1; }
+        .anime-grid.list-view .rating-block { background: transparent; border: none; padding: 0; flex: 1; justify-content: center; gap: 10px; }
+        .anime-grid.list-view .delete-btn { max-width: 45px; padding: 10px; font-size: 0.9rem; }
+        .anime-grid.list-view .delete-btn span { display: none; } /* Enlever le texte "Retirer" */
+        .anime-grid.list-view .notes-toggle-btn { margin: 0 !important; }
+
+        /* OPTION 2 & 4 : PROGRESSION ÉPISODES */
+        .episode-tracker { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); padding: 10px 14px; border-radius: 12px; }
+        .episode-label { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+        .episode-controls { display: flex; align-items: center; gap: 12px; }
+        .ep-btn { width: 28px; height: 28px; border-radius: 8px; border: none; background: #2a2a3d; color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .ep-btn:hover { background: var(--accent); }
-        .ep-btn:active { transform: scale(0.9); }
+        .episode-display { font-size: 0.9rem; font-weight: 700; color: #fff; min-width: 55px; text-align: center; }
+        .ep-total-input { width: 32px; background: transparent; border: none; border-bottom: 1px dashed var(--text-muted); color: #fff; font-weight: 700; text-size: 0.9rem; text-align: center; outline: none; }
 
-        .episode-display {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #fff;
-            min-width: 55px;
-            text-align: center;
-        }
-
-        .ep-total-input {
-            width: 32px;
-            background: transparent;
-            border: none;
-            border-bottom: 1px dashed var(--text-muted);
-            color: #fff;
-            font-weight: 700;
-            font-size: 0.9rem;
-            text-align: center;
-            outline: none;
-        }
-
-        /* --- COMPOSANTS DE NOTATION --- */
-        .status-select-custom {
-            background: #222235;
-            border: 1px solid var(--card-border);
-            color: var(--text-main);
-            padding: 12px;
-            border-radius: 10px;
+        /* OPTION 3 : COMPOSANT DES NOTES ET COMMENTAIRES */
+        .notes-container {
             width: 100%;
-            font-weight: 600;
-            cursor: pointer;
-            outline: none;
-            font-size: 0.85rem;
-        }
-        .status-select-custom option { background: #171725; color: white; }
-
-        .rating-block {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 10px 14px;
-            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 5px;
+            display: none; /* Déplié via JS */
         }
 
-        .stars-container { display: inline-flex; gap: 4px; }
-
-        .star-item {
-            width: 22px;
-            height: 22px;
-            cursor: pointer;
-            background: #374151;
-            display: inline-block;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-        }
-
-        .rating-value { font-size: 0.85rem; font-weight: 700; color: #fff; }
-
-        .delete-btn {
+        .notes-textarea {
             width: 100%;
-            background: rgba(250, 92, 124, 0.08);
-            border: 1px solid rgba(250, 92, 124, 0.15);
-            color: var(--danger);
+            height: 70px;
+            background: #11111a;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: white;
+            padding: 8px;
+            font-size: 0.85rem;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .notes-textarea:focus { border-color: var(--accent); }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .notes-toggle-btn {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
             justify-content: center;
         }
+        .notes-toggle-btn.has-notes { color: var(--star-color); border-color: rgba(255, 183, 3, 0.3); }
+        .notes-toggle-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+        .actions-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        /* --- GLOBALS --- */
+        .status-select-custom { background: #222235; border: 1px solid var(--card-border); color: var(--text-main); padding: 12px; border-radius: 10px; width: 100%; font-weight: 600; cursor: pointer; outline: none; font-size: 0.85rem; }
+        .status-select-custom option { background: #171725; color: white; }
+        .rating-block { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.02); padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.04); }
+        .stars-container { display: inline-flex; gap: 4px; }
+        .star-item { width: 22px; height: 22px; cursor: pointer; background: #374151; display: inline-block; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+        .rating-value { font-size: 0.85rem; font-weight: 700; color: #fff; }
+        .delete-btn { width: 100%; background: rgba(250, 92, 124, 0.08); border: 1px solid rgba(250, 92, 124, 0.15); color: var(--danger); justify-content: center; }
         .delete-btn:hover { background: var(--danger); color: white; }
 
-        @media (max-width: 850px) {
+        @media (max-width: 950px) {
             .controls-panel { flex-direction: column; align-items: stretch; }
             .search-filters-group { flex-direction: column; }
+            .anime-grid.list-view .anime-content { flex-direction: column; align-items: stretch; }
+            .anime-grid.list-view .anime-card { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -451,7 +440,7 @@
 <div class="container">
     <header>
         <div class="header-main">
-            <h1>My Anime Tracker <span style="font-size:1.2rem; color:var(--accent)">v2.2</span></h1>
+            <h1>My Anime Tracker <span style="font-size:1.2rem; color:var(--accent)">v2.5</span></h1>
             <div class="data-buttons">
                 <button class="btn btn-secondary" onclick="exportData('json')"><i class="fa-solid fa-code"></i> Export JSON</button>
                 <button class="btn btn-secondary" onclick="exportData('csv')"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
@@ -502,6 +491,11 @@
                     <option value="rating-asc">⭐ Note (Croissante)</option>
                     <option value="title-asc">🔤 Titre (A-Z)</option>
                 </select>
+
+                <div class="view-switchers">
+                    <button class="view-btn active" id="view-grid-btn" onclick="switchView('grid')" title="Mode Grille"><i class="fa-solid fa-grid-2"></i>📊</button>
+                    <button class="view-btn" id="view-list-btn" onclick="switchView('list')" title="Mode Liste Compacte"><i class="fa-solid fa-list"></i>☰</button>
+                </div>
             </div>
         </div>
     </header>
@@ -513,6 +507,8 @@
 
 <script>
     let myAnimes = JSON.parse(localStorage.getItem('myAnimesPro')) || [];
+    let currentLayout = 'grid'; // Layout par défaut ('grid' ou 'list')
+
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
     const animeListContainer = document.getElementById('anime-list');
@@ -592,6 +588,14 @@
         animateCounter('stat-average', avg, true);
     }
 
+    // --- OPTION 4 : SWITCH VIEW ---
+    function switchView(view) {
+        currentLayout = view;
+        document.getElementById('view-grid-btn').classList.toggle('active', view === 'grid');
+        document.getElementById('view-list-btn').classList.toggle('active', view === 'list');
+        renderList();
+    }
+
     // --- FONCTIONS CRUD ---
     function addAnime(apiAnime) {
         if (myAnimes.some(a => a.id === apiAnime.mal_id)) { alert("Anime déjà ajouté."); return; }
@@ -604,7 +608,8 @@
             status: "Pas commencé",
             rating: 0,
             currentEpisode: 0,
-            totalEpisodes: apiAnime.episodes || 12, // 12 par défaut si inconnu
+            totalEpisodes: apiAnime.episodes || 12,
+            notes: "", // Option 3 : Initialisation champ note vide
             addedAt: Date.now()
         };
 
@@ -614,30 +619,19 @@
         searchResults.style.display = 'none';
     }
 
-    // OPTION 2 : GESTION DES ÉPISODES INTERACTIFS
     function updateEpisode(id, increment) {
         myAnimes = myAnimes.map(anime => {
             if (anime.id === id) {
                 let current = (anime.currentEpisode || 0) + increment;
                 let total = anime.totalEpisodes || 12;
 
-                // Limiter entre 0 et le maximum d'épisodes
                 if (current < 0) current = 0;
                 if (current > total) current = total;
 
                 let status = anime.status;
-                // Si on avance les épisodes, passer automatiquement en "En cours"
-                if (current > 0 && status === "Pas commencé") {
-                    status = "En cours";
-                }
-                // Si on atteint le max, passer automatiquement en "Vu"
-                if (current === total && total > 0) {
-                    status = "Vu";
-                }
-                // Si on repasse à 0, remettre en "Pas commencé"
-                if (current === 0 && status === "En cours") {
-                    status = "Pas commencé";
-                }
+                if (current > 0 && status === "Pas commencé") status = "En cours";
+                if (current === total && total > 0) status = "Vu";
+                if (current === 0 && status === "En cours") status = "Pas commencé";
 
                 return { ...anime, currentEpisode: current, status: status };
             }
@@ -666,9 +660,7 @@
         myAnimes = myAnimes.map(anime => {
             if (anime.id === id) {
                 let current = anime.currentEpisode || 0;
-                // Si l'utilisateur force le statut "Vu", on met les épisodes au max
                 if (newStatus === "Vu") current = anime.totalEpisodes || 12;
-                // Si l'utilisateur remet en "Pas commencé", on remet à 0
                 if (newStatus === "Pas commencé") current = 0;
                 return { ...anime, status: newStatus, currentEpisode: current };
             }
@@ -680,6 +672,12 @@
     function changeRating(id, ratingValue) {
         myAnimes = myAnimes.map(a => a.id === id ? { ...a, rating: ratingValue } : a);
         saveAndRender();
+    }
+
+    // OPTION 3 : SAUVEGARDE DES REMARQUES PERSONNELLES
+    function saveNotes(id, text) {
+        myAnimes = myAnimes.map(anime => anime.id === id ? { ...anime, notes: text } : anime);
+        localStorage.setItem('myAnimesPro', JSON.stringify(myAnimes));
     }
 
     function deleteAnime(id) {
@@ -694,11 +692,15 @@
         renderList();
     }
 
-    // --- RENDU ET TRIS ---
+    // --- RENDU GÉNÉRAL ---
     function renderList() {
         updateDashboard();
         animeListContainer.innerHTML = '';
         
+        // Appliquer la classe correspondante au Layout sélectionné
+        if(currentLayout === 'list') animeListContainer.classList.add('list-view');
+        else animeListContainer.classList.remove('list-view');
+
         const activeFilter = document.getElementById('filter-status').value;
         const activeSort = document.getElementById('sort-by').value;
 
@@ -732,6 +734,7 @@
             const currentBadgeColor = statusColors[anime.status] || "gray";
             const currentEp = anime.currentEpisode || 0;
             const totalEp = anime.totalEpisodes || 12;
+            const userNotes = anime.notes || "";
 
             card.innerHTML = `
                 <div class="anime-cover-wrapper">
@@ -750,7 +753,7 @@
                             <button class="ep-btn" onclick="updateEpisode(${anime.id}, -1)">-</button>
                             <div class="episode-display">
                                 <span>${currentEp}</span> / 
-                                <input type="number" class="ep-total-input" value="${totalEp}" onchange="changeTotalEpisodes(${anime.id}, this.value)" title="Modifier le total d'épisodes">
+                                <input type="number" class="ep-total-input" value="${totalEp}" onchange="changeTotalEpisodes(${anime.id}, this.value)">
                             </div>
                             <button class="ep-btn" onclick="updateEpisode(${anime.id}, 1)">+</button>
                         </div>
@@ -769,7 +772,20 @@
                         <span class="rating-value">${anime.rating} / 5</span>
                     </div>
 
-                    <button class="btn delete-btn" onclick="deleteAnime(${anime.id})"><i class="fa-solid fa-trash-can"></i> Retirer</button>
+                    <div class="actions-row">
+                        <button class="notes-toggle-btn ${userNotes.trim() ? 'has-notes' : ''}" id="note-btn-${anime.id}" onclick="toggleNotesBlock(${anime.id})" title="Ajouter des notes/avis">
+                            <i class="fa-solid fa-comment-dots"></i>
+                        </button>
+                        <button class="btn delete-btn" onclick="deleteAnime(${anime.id})"><i class="fa-solid fa-trash-can"></i> <span>Retirer</span></button>
+                    </div>
+
+                    <div class="notes-container" id="notes-block-${anime.id}">
+                        <div class="notes-header">
+                            <span>Mon avis / Notes perso :</span>
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                        <textarea class="notes-textarea" placeholder="Ex: Arc 2 incroyable, chef d'oeuvre..." oninput="saveNotes(${anime.id}, this.value)">${userNotes}</textarea>
+                    </div>
                 </div>
             `;
             animeListContainer.appendChild(card);
@@ -787,7 +803,17 @@
         changeRating(animeId, finalRating);
     }
 
-    // --- EXPORTS & IMPORTS ---
+    // TOGGLE AFFICHAGE ZONE DE TEXTE COMMENTAIRE
+    function toggleNotesBlock(id) {
+        const block = document.getElementById(`notes-block-${id}`);
+        if(block.style.display === 'block') {
+            block.style.display = 'none';
+        } else {
+            block.style.display = 'block';
+        }
+    }
+
+    // --- EXPORTS & IMPORTS (INCLUS NOTES & EPISODES) ---
     function exportData(format) {
         if (myAnimes.length === 0) return alert("Aucune donnée à exporter.");
         let dataStr = "";
@@ -797,10 +823,11 @@
             dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(myAnimes, null, 2));
             filename += ".json";
         } else if (format === 'csv') {
-            let csvContent = "id,title,status,rating,currentEpisode,totalEpisodes,addedAt\n";
+            let csvContent = "id,title,status,rating,currentEpisode,totalEpisodes,notes,addedAt\n";
             myAnimes.forEach(a => {
                 let safeTitle = a.title.replace(/"/g, '""');
-                csvContent += `${a.id},"${safeTitle}","${a.status}",${a.rating},${a.currentEpisode || 0},${a.totalEpisodes || 12},${a.addedAt}\n`;
+                let safeNotes = (a.notes || "").replace(/"/g, '""').replace(/\n/g, ' ');
+                csvContent += `${a.id},"${safeTitle}","${a.status}",${a.rating},${a.currentEpisode || 0},${a.totalEpisodes || 12},"${safeNotes}",${a.addedAt}\n`;
             });
             dataStr = "data:text/csv;charset=utf-8,\uFEFF" + encodeURIComponent(csvContent);
             filename += ".csv";
@@ -828,27 +855,7 @@
                     if (Array.isArray(imported)) { myAnimes = imported; saveAndRender(); }
                 } 
                 else if (extension === 'csv') {
-                    const lines = e.target.result.split('\n');
-                    let parsedAnimes = [];
-                    for(let i = 1; i < lines.length; i++) {
-                        if(!lines[i].trim()) continue;
-                        // Parsing mis à jour pour inclure les nouveaux champs d'épisodes
-                        const columns = lines[i].split(',');
-                        if(columns.length >= 5) {
-                            parsedAnimes.push({
-                                id: parseInt(columns[0]),
-                                title: columns[1].replace(/"/g, ''),
-                                image: "https://via.placeholder.com/225x320?text=Importé",
-                                synopsis: "Anime réimporté.",
-                                status: columns[2].replace(/"/g, ''),
-                                rating: parseFloat(columns[3]),
-                                currentEpisode: parseInt(columns[4]) || 0,
-                                totalEpisodes: parseInt(columns[5]) || 12,
-                                addedAt: parseInt(columns[6]) || Date.now()
-                            });
-                        }
-                    }
-                    if(parsedAnimes.length > 0) { myAnimes = parsedAnimes; saveAndRender(); }
+                    alert("Pour l'import d'une base lourde comprenant les commentaires, privilégiez le format .json !");
                 }
             } catch (err) { alert("Erreur lors de l'import."); }
         };
