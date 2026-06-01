@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Anime Tracker Pro</title>
-    <link href="style.css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-    
+
 <body>
 
 <div class="container">
@@ -45,10 +48,10 @@
             <div class="search-filters-group">
                 <div class="search-wrapper">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="search-input" placeholder="Rechercher un anime via l'API...">
+                    <input type="text" id="search-input" placeholder="Rechercher un anime via l'API ou filtrez votre liste...">
                     <div id="search-results" class="search-results" style="display: none;"></div>
                 </div>
-                
+
                 <select id="filter-status" class="filter-select" onchange="renderList()">
                     <option value="Tous">📊 Tous les statuts</option>
                     <option value="Pas commencé">⏳ Pas commencé</option>
@@ -67,7 +70,7 @@
 
                 <div class="view-switchers">
                     <button class="view-btn active" id="view-grid-btn" onclick="switchView('grid')" title="Mode Grille">
-                        <i class="fa-solid fa-grid-2"></i> Grille
+                        <i class="fa-solid fa-table-cells-large"></i> Grille
                     </button>
                     <button class="view-btn" id="view-list-btn" onclick="switchView('list')" title="Mode Liste Compacte">
                         <i class="fa-solid fa-list"></i> Liste
@@ -82,7 +85,6 @@
     </main>
 </div>
 
-<script src="script.js" defer ></script>
-    
+<script src="script.js" defer></script>
 </body>
 </html>
