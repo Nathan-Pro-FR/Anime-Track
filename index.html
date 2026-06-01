@@ -18,6 +18,10 @@
             --danger: #fa5c7c;
             --danger-hover: #e04463;
             --star-color: #ffb703;
+            
+            /* Couleurs pour les options du menu déroulant */
+            --select-dropdown-bg: #1f1f2e;
+            --select-option-hover: #2a2a3d;
         }
 
         * {
@@ -253,9 +257,9 @@
             -webkit-line-clamp: unset;
         }
 
-        /* Custom Dropdown Sélecteur */
+        /* CORRECTION DU SELECTEUR (SÉLECTION DE STATUT) */
         .status-select {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--card-border);
             color: var(--text-main);
             padding: 12px;
@@ -265,10 +269,19 @@
             cursor: pointer;
             outline: none;
             font-size: 0.85rem;
+            transition: all 0.2s;
         }
 
         .status-select:focus {
             border-color: var(--accent);
+            background: var(--select-dropdown-bg);
+        }
+
+        /* Forcer les couleurs du menu qui s'ouvre */
+        .status-select option {
+            background-color: var(--select-dropdown-bg);
+            color: var(--text-main);
+            padding: 12px;
         }
 
         /* Fix complet du système de notation en étoiles */
@@ -287,12 +300,11 @@
             gap: 4px;
         }
 
-        /* L'étoile est gérée par un masque CSS découpé sur un bloc à fond dégradé */
         .star-item {
             width: 22px;
             height: 22px;
             cursor: pointer;
-            background: #374151; /* Couleur vide */
+            background: #374151;
             display: inline-block;
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
             transition: transform 0.1s;
@@ -365,7 +377,7 @@
     const searchResults = document.getElementById('search-results');
     const animeListContainer = document.getElementById('anime-list');
 
-    // --- RECHERCHE AVEC DEBOUNCE (API Jikan) ---
+    // --- RECHERCHE (API Jikan) ---
     let debounceTimer;
     searchInput.addEventListener('input', () => {
         clearTimeout(debounceTimer);
@@ -454,7 +466,7 @@
         }
     });
 
-    // --- RENDU ET CORRECTION DU BUG DES ÉTOILES ---
+    // --- RENDU DES CARTES ---
     function renderList() {
         animeListContainer.innerHTML = '';
         
@@ -467,7 +479,6 @@
             const card = document.createElement('div');
             card.className = 'anime-card';
 
-            // Génération dynamique des étoiles avec masques géométriques
             let starsHTML = '';
             for (let i = 1; i <= 5; i++) {
                 let fillPercent = 0;
@@ -477,7 +488,6 @@
                     fillPercent = 50;
                 }
 
-                // Utilisation d'un gradient linéaire CSS pour colorer l'étoile précisément sans bug de font
                 const starStyle = `background: linear-gradient(90deg, var(--star-color) ${fillPercent}%, #374151 ${fillPercent}%);`;
                 starsHTML += `<div class="star-item" style="${starStyle}" onclick="handleStarClick(${anime.id}, ${i}, event)"></div>`;
             }
@@ -514,7 +524,6 @@
         });
     }
 
-    // Gestion propre du clic : gauche pour .5, droite pour l'unité entière
     function handleStarClick(animeId, starIndex, event) {
         const rect = event.target.getBoundingClientRect();
         const clickX = event.clientX - rect.left;
@@ -522,7 +531,6 @@
         
         let finalRating = isHalf ? starIndex - 0.5 : starIndex;
         
-        // Permet de reset à 0 si on ré-appuie exactement sur la note actuelle
         const currentAnime = myAnimes.find(a => a.id === animeId);
         if (currentAnime && currentAnime.rating === finalRating) {
             finalRating = 0;
