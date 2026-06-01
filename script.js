@@ -13,19 +13,28 @@ const statusColors = {
     "Abandonné": "var(--color-abandonne)"
 };
 
-// --- LOGIQUE API JIKAN ---
+// --- LOGIQUE RECHERCHE API + FILTRAGE LOCAL ---
 let debounceTimer;
 searchInput.addEventListener('input', () => {
-    clearTimeout(debounceTimer);
     const query = searchInput.value.trim();
-    if (query.length < 3) { searchResults.style.display = 'none'; return; }
+    
+    // Déclenche le rendu local à chaque saisie pour filtrer dynamiquement votre collection
+    renderList();
+
+    clearTimeout(debounceTimer);
+    if (query.length < 3) { 
+        searchResults.style.display = 'none'; 
+        return; 
+    }
 
     debounceTimer = setTimeout(async () => {
         try {
             const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=6`);
             const data = await response.json();
             displaySearchResults(data.data);
-        } catch (error) { console.error("Erreur API:", error); }
+        } catch (error) { 
+            console.error("Erreur API:", error); 
+        }
     }, 400);
 });
 
@@ -37,13 +46,14 @@ function displaySearchResults(animes) {
         const div = document.createElement('div');
         div.className = 'search-item';
         div.innerHTML = `
-                <img src="${anime.images.jpg.image_url}" alt="">
+                <img src="${anime.images.jpg.image_url}" alt="${anime.title}">
                 <div class="info-box">
                     <span class="title">${anime.title}</span>
                     <span class="meta">${anime.type || 'TV'} • ${anime.episodes || '?'} éps</span>
                 </div>
             `;
-        div.onclick = () => addAnime(anime);
+        // Correction de la portée de l'événement onclick
+        div.addEventListener('click', () => addAnime(anime));
         searchResults.appendChild(div);
     });
     searchResults.style.display = 'block';
@@ -52,6 +62,7 @@ function displaySearchResults(animes) {
 // --- COMPTEURS INCREMENTAUX ANIMÉS ---
 function animateCounter(id, targetValue, isFloat = false) {
     const el = document.getElementById(id);
+    if (!el) return; // Sécurité si l'élément n'existe pas encore
     const startValue = parseFloat(el.innerText) || 0;
     const duration = 600;
     let startTime = null;
@@ -80,7 +91,6 @@ function updateDashboard() {
     animateCounter('stat-average', avg, true);
 }
 
-// --- INTERRUPTEUR DE VUE LAYOUT ---
 function switchView(view) {
     currentLayout = view;
     document.getElementById('view-grid-btn').classList.toggle('active', view === 'grid');
@@ -111,7 +121,8 @@ function addAnime(apiAnime) {
     searchResults.style.display = 'none';
 }
 
-function updateEpisode(id, increment) {
+// Rendre ces fonctions globales pour l'utilisation dans les attributs HTML inline `onclick` et `onchange`
+window.updateEpisode = function(id, increment) {
     myAnimes = myAnimes.map(anime => {
         if (anime.id === id) {
             let current = (anime.currentEpisode || 0) + increment;
@@ -130,9 +141,9 @@ function updateEpisode(id, increment) {
         return anime;
     });
     saveAndRender();
-}
+};
 
-function changeTotalEpisodes(id, newTotal) {
+window.changeTotalEpisodes = function(id, newTotal) {
     let total = parseInt(newTotal) || 0;
     if (total < 1) total = 1;
 
@@ -146,9 +157,9 @@ function changeTotalEpisodes(id, newTotal) {
         return anime;
     });
     saveAndRender();
-}
+};
 
-function changeStatus(id, newStatus) {
+window.changeStatus = function(id, newStatus) {
     myAnimes = myAnimes.map(anime => {
         if (anime.id === id) {
             let current = anime.currentEpisode || 0;
@@ -159,31 +170,49 @@ function changeStatus(id, newStatus) {
         return anime;
     });
     saveAndRender();
-}
+};
 
-function changeRating(id, ratingValue) {
+window.changeRating = function(id, ratingValue) {
     myAnimes = myAnimes.map(a => a.id === id ? { ...a, rating: ratingValue } : a);
     saveAndRender();
-}
+};
 
-function saveNotes(id, text) {
+window.saveNotes = function(id, text) {
     myAnimes = myAnimes.map(anime => anime.id === id ? { ...anime, notes: text } : anime);
     localStorage.setItem('myAnimesPro', JSON.stringify(myAnimes));
-}
+};
 
-function deleteAnime(id) {
+window.deleteAnime = function(id) {
     if (confirm("Supprimer cet anime de ta liste ?")) {
         myAnimes = myAnimes.filter(a => a.id !== id);
         saveAndRender();
     }
-}
+};
+
+window.handleStarClick = function(animeId, starIndex, event) {
+    const rect = event.target.getBoundingClientRect();
+    const isHalf = (event.clientX - rect.left) < (rect.width / 2);
+    let finalRating = isHalf ? starIndex - 0.5 : starIndex;
+
+    const current = myAnimes.find(a => a.id === animeId);
+    if (current && current.rating === finalRating) finalRating = 0;
+
+    window.changeRating(animeId, finalRating);
+};
+
+window.toggleNotesBlock = function(id) {
+    const block = document.getElementById(`notes-block-${id}`);
+    if (block) {
+        block.style.display = (block.style.display === 'block') ? 'none' : 'block';
+    }
+};
 
 function saveAndRender() {
     localStorage.setItem('myAnimesPro', JSON.stringify(myAnimes));
     renderList();
 }
 
-// --- ALGORITHMES DE RENDU ET INJECTION DOM ---
+// --- ALGORITHMES DE RENDU ---
 function renderList() {
     updateDashboard();
     animeListContainer.innerHTML = '';
@@ -193,8 +222,14 @@ function renderList() {
 
     const activeFilter = document.getElementById('filter-status').value;
     const activeSort = document.getElementById('sort-by').value;
+    const searchQuery = searchInput.value.toLowerCase().trim();
 
-    let filteredList = myAnimes.filter(anime => activeFilter === "Tous" || anime.status === activeFilter);
+    // Application combinée du filtre de statut ET du champ de recherche textuelle
+    let filteredList = myAnimes.filter(anime => {
+        const matchesStatus = (activeFilter === "Tous" || anime.status === activeFilter);
+        const matchesSearch = anime.title.toLowerCase().includes(searchQuery);
+        return matchesStatus && matchesSearch;
+    });
 
     filteredList.sort((a, b) => {
         if (activeSort === 'rating-desc') return b.rating - a.rating;
@@ -229,7 +264,7 @@ function renderList() {
         card.innerHTML = `
                 <div class="anime-cover-wrapper">
                     <span class="status-badge-pill" style="background:${currentBadgeColor}; color:#111;">${anime.status}</span>
-                    <img src="${anime.image}" alt="">
+                    <img src="${anime.image}" alt="${anime.title}">
                 </div>
                 <div class="anime-content">
                     <div class="anime-title" title="${anime.title}">${anime.title}</div>
@@ -282,24 +317,8 @@ function renderList() {
     });
 }
 
-function handleStarClick(animeId, starIndex, event) {
-    const rect = event.target.getBoundingClientRect();
-    const isHalf = (event.clientX - rect.left) < (rect.width / 2);
-    let finalRating = isHalf ? starIndex - 0.5 : starIndex;
-
-    const current = myAnimes.find(a => a.id === animeId);
-    if (current && current.rating === finalRating) finalRating = 0;
-
-    changeRating(animeId, finalRating);
-}
-
-function toggleNotesBlock(id) {
-    const block = document.getElementById(`notes-block-${id}`);
-    block.style.display = (block.style.display === 'block') ? 'none' : 'block';
-}
-
 // --- ENTRÉES ET SORTIES EXPORT JSON / CSV ---
-function exportData(format) {
+window.exportData = function(format) {
     if (myAnimes.length === 0) return alert("Aucune donnée à exporter.");
     let dataStr = "";
     let filename = `mon_anime_tracker_${Date.now()}`;
@@ -324,9 +343,9 @@ function exportData(format) {
     document.body.appendChild(dlAnchor);
     dlAnchor.click();
     dlAnchor.remove();
-}
+};
 
-function importData(event) {
+window.importData = function(event) {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -337,19 +356,30 @@ function importData(event) {
         try {
             if (extension === 'json') {
                 const imported = JSON.parse(e.target.result);
-                if (Array.isArray(imported)) { myAnimes = imported; saveAndRender(); }
+                if (Array.isArray(imported)) { 
+                    myAnimes = imported; 
+                    saveAndRender(); 
+                } else {
+                    alert("Le fichier JSON n'est pas au bon format.");
+                }
             } else {
                 alert("Pour l'import, merci d'utiliser exclusivement un fichier au format .json.");
             }
-        } catch (err) { alert("Erreur lors de l'import."); }
+        } catch (err) { 
+            alert("Erreur lors de la lecture ou de l'analyse du fichier."); 
+        }
     };
     reader.readAsText(file);
-}
+};
 
+// Fermer les résultats de recherche Jikan si on clique en dehors
 document.addEventListener('click', (e) => {
     if (!e.target.closest('#search-input') && !e.target.closest('#search-results')) {
         searchResults.style.display = 'none';
     }
 });
 
+// Initialisation globale au chargement
+window.switchView = switchView;
+window.renderList = renderList;
 renderList();
