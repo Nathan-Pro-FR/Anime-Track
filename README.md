@@ -11,16 +11,16 @@ Une application web moderne, fluide et performante pour gérer, trier et suivre 
 
 * [1. ✨ Fonctionnalités Clefs](#1--fonctionnalités-clefs)
   * [I. 📊 Dashboard Analytique Dynamique](#i--dashboard-analytique-dynamique)
-  * [II. 🎛️ Gestion et Layout de l'Affichage](#ii--gestion-et-layout-de-laffichage)
+  * [II. 🎛️ Gestion et Layout de l'Affichage](#ii-gestion-et-layout-de-laffichage)
   * [III. 📝 Tracking Avancé & Notes Personnelles](#iii--tracking-avancé--notes-personnelles)
   * [IV. 🔒 Expérience Utilisateur UI/UX Premium](#iv--expérience-utilisateur-uiux-premium)
 * [2. 📂 Architecture du Projet](#2--architecture-du-projet)
   * [I. Rôle des modules JavaScript](#i-rôle-des-modules-javascript-)
 * [3. 🎨 Guide des Styles & Design](#3--guide-des-styles--design)
   * [I. Palette de Couleurs Globale](#i-palette-de-couleurs-globale)
-* [4. 🛠️ Installation et Démarrage](#4--installation-et-démarrage)
+* [4. 🛠️ Installation et Démarrage](#4-installation-et-démarrage)
 * [5. 🚀 Utilisation du Système de Popups](#5--utilisation-du-système-de-popups)
-  * [1. Déclencher un Toast Flottant](#1-déclencher un-toast-flottant)
+  * [1. Déclencher un Toast Flottant](#1-déclencher-un-toast-flottant)
   * [2. Fonctionnement de la Modal de Confirmation](#2-fonctionnement-de-la-modal-de-confirmation)
 * [6. 📄 Licence](#6--licence)
 
@@ -144,7 +144,7 @@ deleteAnime(animeId);
 
 ## 6. 📄 Licence
 
-Ce projet est sous licence MIT. Consultez le fichier [LICENSE](https://github.com/Nathan-Pro-FR/Anime-Track/LICENSE) pour plus de détails.
+Ce projet est sous licence MIT. Consultez le fichier [LICENSE](https://github.com/Nathan-Pro-FR/Anime-Track/blob/main/LICENSE) pour plus de détails.
 
 ---
 
