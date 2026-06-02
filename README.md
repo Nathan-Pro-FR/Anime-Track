@@ -19,6 +19,9 @@ Une application web moderne, fluide et performante pour gérer, trier et suivre 
 * [3. 🎨 Guide des Styles & Design](#3--guide-des-styles--design)
   * [I. Palette de Couleurs Globale](#i-palette-de-couleurs-globale)
 * [4. 🛠️ Installation et Démarrage](#4--installation-et-démarrage)
+  * [I. Cloner le dépôt](#i-cloner-le-dépôt)
+  * [II. Lancer un serveur local](#ii-lancer-un-serveur-local)
+  * [III. Ouvrir le localhost](#iii--ouvrir-le-localhost)
 * [5. 🚀 Utilisation du Système de Popups](#5--utilisation-du-système-de-popups)
   * [1. Déclencher un Toast Flottant](#1-déclencher-un-toast-flottant)
   * [2. Fonctionnement de la Modal de Confirmation](#2-fonctionnement-de-la-modal-de-confirmation)
@@ -89,7 +92,7 @@ L'interface repose sur une architecture CSS moderne utilisant massivement les **
 
 Puisque l'application utilise les modules JavaScript natifs d'ES6 (`import / export`), elle nécessite d'être exécutée à travers un serveur local pour des raisons de sécurité liées aux politiques CORS des navigateurs.
 
-1. **Cloner le dépôt :**
+### I. Cloner le dépôt
 
 ```bash
 git clone [https://github.com/Nathan-Pro-FR/Anime-Track.git](https://github.com/Nathan-Pro-FR/Anime-Track.git)
@@ -97,7 +100,7 @@ cd Anime-Track
 
 ```
 
-2. **Lancer un serveur local :**
+### II. Lancer un serveur local
 
 * Si vous utilisez **VS Code**, faites un clic droit sur `index.html` et sélectionnez **Open with Live Server**.
 * Ou utilisez **Node.js** (`http-server`) :
@@ -110,7 +113,8 @@ npx http-server .
 python -m http.server 8000
 ```
 
-3. Ouvrez votre navigateur sur l'adresse locale fournie (ex: `http://localhost:8000`).
+### III. Ouvrir le localhost
+Ouvrez votre navigateur sur l'adresse locale fournie (ex: `http://localhost:8000`).
 
 
 ## 5. 🚀 Utilisation du Système de Popups
