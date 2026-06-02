@@ -7,13 +7,22 @@
 
 Une application web moderne, fluide et performante pour gérer, trier et suivre votre progression d'Animes en temps réel. Conçue avec une architecture modulaire en Vanilla JavaScript et un design sombre premium inspiré des tableaux de bord SaaS de pointe.
 
+## 📖 Sommaire Global
 
-## 📖 Sommaire
-1. [1. ✨ Fonctionnalités Clefs](#-fonctionnalités-clefs)
-2. [2. 📂 Architecture du Projet](#-architecture-du-projet)
-3. [3. 🎨 Guide des Styles & Design](#-guide-des-styles--design)
-4. [4. 🛠️ Installation et Démarrage](#%EF%B8%8F-installation-et-démarrage)
-5. [5. 🚀 Utilisation du Système de Popups](#-utilisation-du-système-de-popups)
+* [1. ✨ Fonctionnalités Clefs](#1--fonctionnalités-clefs)
+  * [I. 📊 Dashboard Analytique Dynamique](#i--dashboard-analytique-dynamique)
+  * [II. 🎛️ Gestion et Layout de l'Affichage](#ii--gestion-et-layout-de-laffichage)
+  * [III. 📝 Tracking Avancé & Notes Personnelles](#iii--tracking-avancé--notes-personnelles)
+  * [IV. 🔒 Expérience Utilisateur UI/UX Premium](#iv--expérience-utilisateur-uiux-premium)
+* [2. 📂 Architecture du Projet](#2--architecture-du-projet)
+  * [I. Rôle des modules JavaScript](#i-rôle-des-modules-javascript-)
+* [3. 🎨 Guide des Styles & Design](#3--guide-des-styles--design)
+  * [I. Palette de Couleurs Globale](#i-palette-de-couleurs-globale)
+* [4. 🛠️ Installation et Démarrage](#4--installation-et-démarrage)
+* [5. 🚀 Utilisation du Système de Popups](#5--utilisation-du-système-de-popups)
+  * [1. Déclencher un Toast Flottant](#1-déclencher un-toast-flottant)
+  * [2. Fonctionnement de la Modal de Confirmation](#2-fonctionnement-de-la-modal-de-confirmation)
+* [6. 📄 Licence](#6--licence)
 
 
 ## 1. ✨ Fonctionnalités Clefs
@@ -32,7 +41,7 @@ Une application web moderne, fluide et performante pour gérer, trier et suivre 
 * **Notation par Étoiles :** Système de notation premium prenant en charge les **demi-étoiles** grâce à un calcul précis de la position du curseur.
 * **Bloc de Notes Perso :** Zone de texte rétractable persistante permettant d'ajouter vos remarques, théories ou avis sur chaque œuvre.
 
-### VI. 🔒 Expérience Utilisateur UI/UX Premium
+### IV. 🔒 Expérience Utilisateur UI/UX Premium
 * **Toasts de Notification Flottants :** Messages d'information interactifs dotés d'une animation physique fluide (effet d'élévation 3D et lueur diffuse colorée au survol).
 * **Modal de Confirmation Personnalisée :** Remplacement des alertes de navigateur basiques par une boîte de dialogue modale élégante avec arrière-plan flouté (`backdrop-filter`) pour sécuriser les suppressions.
 * **Persistance locale :** Sauvegarde automatique et transparente de l'intégralité de votre liste via l'API `localStorage`.
@@ -45,7 +54,7 @@ Le projet applique une séparation stricte des concepts (**SoC**) en divisant le
 ```tree
 ├── index.html          # Structure de base de l'application et squelette HTML
 ├── style.css           # Design global, variables CSS, animations & responsive
-├── api.js              # API : Communication entre MyAnimeList via l'API de jikan
+├── api.js              # API : Communication avec l'API Jikan pour la recherche d'animes
 ├── config.js           # Source de vérité : État global, constantes et configuration
 ├── dom.js              # Moteur de rendu : Manipulation du DOM, cartes, toasts et modals
 └── app.js              # Chef d'orchestre : Initialisation et écouteurs d'événements globaux
@@ -56,7 +65,7 @@ Le projet applique une séparation stricte des concepts (**SoC**) en divisant le
 * **`config.js` :** Gère la structure de données des animes et exporte l'état (`myAnimes`). Il centralise également les configurations comme la palette de couleurs des statuts et fait le pont avec le stockage local.
 * **`dom.js` :** Injecte et construit dynamiquement les cartes d'animes. Il contient la logique comportementale isolée (clics d'étoiles, calcul d'épisodes) ainsi que le cycle de vie visuel des Toasts et des Modals.
 * **`app.js` :** Intercepte les événements de premier niveau (soumission du formulaire de recherche, changement des filtres principaux de la page, boutons d'export). C'est lui qui lance le premier rendu au chargement complet du DOM.
-* **`api.js` :** 
+* **`api.js` :** Centralise les requêtes HTTP asynchrones. Il communique avec l'API publique Jikan (MyAnimeList) pour récupérer les métadonnées des animes (titres, images, synopsis, épisodes) de manière asynchrone avec un système d'anti-rebond (*debounce*).
 
 
 ## 3. 🎨 Guide des Styles & Design
@@ -78,13 +87,13 @@ L'interface repose sur une architecture CSS moderne utilisant massivement les **
 
 ## 4. 🛠️ Installation et Démarrage
 
-Puisque l'application utilise les modules JavaScript natifs d'ES6 (`import / export`), elle nécessite d'être exécutée à travers un serveur local pour des raisons de sécurité de politique CORS.
+Puisque l'application utilise les modules JavaScript natifs d'ES6 (`import / export`), elle nécessite d'être exécutée à travers un serveur local pour des raisons de sécurité liées aux politiques CORS des navigateurs.
 
 1. **Cloner le dépôt :**
 
 ```bash
-   git clone [https://github.com/votre-utilisateur/anime-tracker-pro.git](https://github.com/votre-utilisateur/anime-tracker-pro.git)
-   cd anime-tracker-pro
+git clone [https://github.com/Nathan-Pro-FR/Anime-Track.git](https://github.com/Nathan-Pro-FR/Anime-Track.git)
+cd Anime-Track
 
 ```
 
@@ -94,13 +103,11 @@ Puisque l'application utilise les modules JavaScript natifs d'ES6 (`import / exp
 * Ou utilisez **Node.js** (`http-server`) :
 
 ```bash
-     npx http-server .
+npx http-server .
 ```
-
 * Ou utilisez **Python** :
-
 ```bash
-     python -m http.server 8000
+python -m http.server 8000
 ```
 
 3. Ouvrez votre navigateur sur l'adresse locale fournie (ex: `http://localhost:8000`).
@@ -137,7 +144,8 @@ deleteAnime(animeId);
 
 ## 6. 📄 Licence
 
-Ce projet est sous licence MIT. Consultez le fichier [LICENSE](https://www.google.com/search?q=LICENSE) pour plus de détails.
+Ce projet est sous licence MIT. Consultez le fichier [LICENSE](https://github.com/Nathan-Pro-FR/Anime-Track/LICENSE) pour plus de détails.
 
+---
 
 Ménagé avec ❤️ pour les passionnés d'animation. Donnez une ⭐️ au projet si vous l'utilisez !
