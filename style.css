@@ -76,7 +76,7 @@ h1 {
     gap: 20px;
     position: relative;
     /* overflow: hidden; */ /* SUPPRIMÉ pour éviter de masquer ou couper le toolkit */
-    background-clip: padding-box;
+    background-clip: padding-box; /* Assure que le fond ne bave pas sous la bordure */
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
@@ -875,4 +875,97 @@ input[type="text"]:focus,
     .stat-card.average .stat-icon[data-tooltip]::after {
         left: 65%;
     }
+}
+
+/* --- TOASTS NOTIFICATIONS --- */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+}
+
+/* --- MODAL CONFIRMATION DE SUPPRESSION --- */
+.modal-backdrop {
+    display: none; /* Géré par le JS en 'flex' quand nécessaire */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box {
+    background: #171725;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 16px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+}
+
+.modal-icon {
+    color: #fa5c7c;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.modal-title {
+    color: #fff;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.modal-text {
+    color: #6c7293;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.modal-btn:active {
+    transform: scale(0.98);
+}
+
+.btn-cancel {
+    background: #222235;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #f3f4f6;
+}
+
+.btn-cancel:hover {
+    background: #2b2b42;
+}
+
+.btn-confirm {
+    background: #fa5c7c;
+    border: none;
+    color: #fff;
+}
+
+.btn-confirm:hover {
+    background: #e04b68;
 }

@@ -22,10 +22,10 @@
         <div class="header-main">
             <h1>My Anime Tracker <span style="font-size:1.2rem; color:var(--accent)">v2.5</span></h1>
             <div class="data-buttons">
-                <button class="btn btn-secondary" onclick="exportData('json')"><i class="fa-solid fa-code"></i> Export JSON</button>
-                <button class="btn btn-secondary" onclick="exportData('csv')"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
-                <button class="btn btn-primary" onclick="document.getElementById('import-file').click()"><i class="fa-solid fa-file-import"></i> Importer</button>
-                <input type="file" id="import-file" style="display: none;" accept=".json,.csv" onchange="importData(event)">
+                <button class="btn btn-secondary" id="btn-export-json"><i class="fa-solid fa-code"></i> Export JSON</button>
+                <button class="btn btn-secondary" id="btn-export-csv"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+                <button class="btn btn-primary" id="btn-trigger-import"><i class="fa-solid fa-file-import"></i> Importer</button>
+                <input type="file" id="import-file" style="display: none;" accept=".json,.csv">
             </div>
         </div>
 
@@ -91,7 +91,20 @@
     </main>
 </div>
 
-<script src="script.js" defer></script>
+<div id="toast-container"></div>
 
+    <div id="custom-confirm-modal" class="modal-backdrop">
+        <div class="modal-box">
+            <i class="fa-solid fa-triangle-exclamation modal-icon"></i>
+            <h3 class="modal-title">Supprimer l'anime ?</h3>
+            <p class="modal-text">Êtes-vous sûr de vouloir retirer cet anime de votre collection ? Cette action est irréversible.</p>
+            <div class="modal-actions">
+                <button id="confirm-cancel-btn" class="modal-btn btn-cancel">Annuler</button>
+                <button id="confirm-delete-btn" class="modal-btn btn-confirm">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js" type="module"></script>
 </body>
 </html>
